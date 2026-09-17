@@ -1,0 +1,27 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment and sensitive credentials
+.env
+.env.local
+
+# Browser Profiles & Local Session Data
+chrome_user_data/
+.playwright/
+
+# Large Binaries and tools that can be downloaded / installed
+tools/cloudflared.exe
+tools/nssm.exe
+*.exe
+
+# Logs and Runtime files
+logs/*
+!logs/.gitkeep
+
+# IDE / Editor Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

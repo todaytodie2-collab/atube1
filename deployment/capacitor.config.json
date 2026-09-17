@@ -1,0 +1,20 @@
+{
+  "appId": "com.atube.tv",
+  "appName": "Atube",
+  "webDir": ".",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://attributes-cet-tap-heritage.trycloudflare.com",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": true
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}

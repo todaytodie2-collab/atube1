@@ -1,0 +1,16 @@
+{
+  "name": "atube-tv",
+  "version": "1.0.1",
+  "private": true,
+  "scripts": {
+    "sync": "cap sync",
+    "copy": "cap copy"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.1",
+    "@capacitor/core": "^8.5.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.1"
+  }
+}

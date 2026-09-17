@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A TuBe - بوابة التحويل التلقائي الذكية</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #e50914;
+      --primary-glow: rgba(229, 9, 20, 0.45);
+      --accent: #00d2ff;
+      --bg-dark: #0a0a0f;
+      --card-bg: rgba(18, 18, 28, 0.75);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --text-main: #f5f5f7;
+      --text-muted: #8e8ea0;
+      --success: #00e676;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 20%, #1a102f 0%, #0a0a0f 80%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Ambient Background Glows */
+    body::before {
+      content: '';
+      position: absolute;
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      filter: blur(60px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+      background: var(--card-bg);
+      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      padding: 36px 28px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(229, 9, 20, 0.15);
+      text-align: center;
+      animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Logo & Pulse Ring */
+    .logo-wrapper {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 20px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pulse-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid var(--primary);
+      animation: pulse 2.2s infinite ease-out;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.8; }
+      50% { transform: scale(1.25); opacity: 0.2; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+
+    .logo-badge {
+      width: 80px;
+      height: 80px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #ff0844 0%, #ff4e50 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      font-weight: 900;
+      color: #fff;
+      box-shadow: 0 10px 25px rgba(255, 8, 68, 0.4);
+      z-index: 2;
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+      background: linear-gradient(90deg, #ffffff, #dcdcdc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    /* Status Pill */
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 50px;
+      background: rgba(0, 230, 118, 0.1);
+      border: 1px solid rgba(0, 230, 118, 0.25);
+      color: var(--success);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 10px var(--success);
+      animation: blink 1.5s infinite ease-in-out;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* Progress & Redirect Notice */
+    .redirect-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+
+    .redirect-msg {
+      font-size: 14px;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--primary));
+      border-radius: 10px;
+      transition: width 0.1s linear;
+    }
+
+    /* Action Buttons */
+    .actions-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: 16px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      border: none;
+      outline: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #e50914 0%, #b20710 100%);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(229, 9, 20, 0.35);
+    }
+
+    .btn-primary:hover, .btn-primary:active {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(229, 9, 20, 0.5);
+    }
+
+    .btn-player {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+
+    .btn-player:hover, .btn-player:active {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      font-size: 13px;
+      padding: 10px;
+    }
+
+    .btn-outline:hover {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .icon {
+      font-size: 18px;
+    }
+
+    /* Footer Meta */
+    .footer {
+      margin-top: 24px;
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .target-url {
+      word-break: break-all;
+      color: var(--accent);
+      direction: ltr;
+      display: inline-block;
+      margin-top: 4px;
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      background: rgba(18, 18, 28, 0.95);
+      border: 1px solid var(--accent);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="logo-wrapper">
+      <div class="pulse-ring"></div>
+      <div class="logo-badge">▶</div>
+    </div>
+
+    <h1>A TuBe Ultra HD</h1>
+    <p class="subtitle">البوابة السحابية المحدثة دائماً والمقاومة للحجب</p>
+
+    <div class="status-pill" id="statusPill">
+      <div class="status-dot"></div>
+      <span id="statusText">جاري مزامنة عنوان السيرفر الحي...</span>
+    </div>
+
+    <div class="redirect-card">
+      <div class="redirect-msg" id="redirectNotice">سيتم تحويلك تلقائياً خلال <span id="countdown">2</span> ثوانٍ...</div>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="target-url" id="targetUrlDisplay">جاري الفحص...</div>
+    </div>
+
+    <div class="actions-grid">
+      <a href="#" class="btn btn-primary" id="btnEnterNow">
+        <span class="icon">🚀</span>
+        <span>دخول فوري الآن للموقع</span>
+      </a>
+
+      <button class="btn btn-player" id="btnLaunchTDM">
+        <span class="icon">⚡</span>
+        <span>تشغيل مباشر في تطبيق 1DM / TDM</span>
+      </button>
+
+      <button class="btn btn-player" id="btnLaunchASD">
+        <span class="icon">🎬</span>
+        <span>تشغيل مباشر في ASD Player</span>
+      </button>
+
+      <button class="btn btn-outline" id="btnCopyLink">
+        <span class="icon">📋</span>
+        <span>نسخ الرابط المباشر النشط</span>
+      </button>
+    </div>
+
+    <div class="footer">
+      <div>تم التحديث بنجاح عبر خدمة التوجيه الذكية Cloud Tunnel Bridge</div>
+      <div id="lastUpdated">A TuBe Smart Gateway v2.0</div>
+    </div>
+  </div>
+
+  <div id="toast">تم نسخ الرابط بنجاح!</div>
+
+  <script>
+    let activeServerUrl = "http://127.0.0.1:8085";
+    let isRedirecting = true;
+    let countdownSec = 2;
+    const progressEl = document.getElementById("progressBar");
+    const countdownEl = document.getElementById("countdown");
+    const statusTextEl = document.getElementById("statusText");
+    const targetUrlDisplay = document.getElementById("targetUrlDisplay");
+    const btnEnterNow = document.getElementById("btnEnterNow");
+    const btnLaunchTDM = document.getElementById("btnLaunchTDM");
+    const btnLaunchASD = document.getElementById("btnLaunchASD");
+    const btnCopyLink = document.getElementById("btnCopyLink");
+    const toastEl = document.getElementById("toast");
+
+    function showToast(msg) {
+      toastEl.innerText = msg;
+      toastEl.classList.add("show");
+      setTimeout(() => toastEl.classList.remove("show"), 2500);
+    }
+
+    function updateUIWithUrl(url) {
+      if (!url.endsWith("/")) {
+        activeServerUrl = url;
+      } else {
+        activeServerUrl = url.slice(0, -1);
+      }
+      const fullWebUrl = activeServerUrl + "/index.html";
+      
+      btnEnterNow.href = fullWebUrl;
+      targetUrlDisplay.innerText = fullWebUrl;
+      statusTextEl.innerText = "السيرفر متصل ونشط 100%";
+      document.getElementById("statusPill").style.background = "rgba(0, 230, 118, 0.12)";
+
+      // Setup 1DM intent
+      btnLaunchTDM.onclick = () => {
+        const intentUrl = `intent:${fullWebUrl}#Intent;package=idm.internet.download.manager;action=android.intent.action.VIEW;scheme=https;end`;
+        window.location.href = intentUrl;
+      };
+
+      // Setup ASD player intent
+      btnLaunchASD.onclick = () => {
+        const intentUrl = `intent:${fullWebUrl}#Intent;package=com.asd.video.player;action=android.intent.action.VIEW;scheme=https;end`;
+        window.location.href = intentUrl;
+      };
+
+      btnCopyLink.onclick = () => {
+        navigator.clipboard.writeText(fullWebUrl).then(() => {
+          showToast("تم نسخ رابط السيرفر المباشر!");
+        }).catch(() => {
+          prompt("انسخ الرابط يدوياً:", fullWebUrl);
+        });
+      };
+    }
+
+    async function fetchActiveUrl() {
+      // 1. First attempt: active_url.json in the same repo with cache busting
+      try {
+        const res = await fetch(`active_url.json?_t=${Date.now()}`, { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.url) {
+            updateUIWithUrl(data.url);
+            if (data.updated_at) {
+              document.getElementById("lastUpdated").innerText = `آخر تحديث للسيرفر: ${new Date(data.updated_at).toLocaleTimeString('ar-EG')}`;
+            }
+            startRedirectTimer();
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn("Local active_url.json fetch failed, checking fallbacks...", e);
+      }
+
+      // 2. Fallback to current host or stored storage
+      const cached = localStorage.getItem("atube_last_known_url");
+      if (cached) {
+        updateUIWithUrl(cached);
+      } else {
+        updateUIWithUrl(activeServerUrl);
+      }
+      startRedirectTimer();
+    }
+
+    function startRedirectTimer() {
+      let startTime = performance.now();
+      const totalDuration = countdownSec * 1000;
+
+      function step(now) {
+        if (!isRedirecting) return;
+        const elapsed = now - startTime;
+        const progress = Math.min(100, (elapsed / totalDuration) * 100);
+        progressEl.style.width = `${progress}%`;
+
+        const remaining = Math.max(0, Math.ceil((totalDuration - elapsed) / 1000));
+        countdownEl.innerText = remaining;
+
+        if (elapsed < totalDuration) {
+          requestAnimationFrame(step);
+        } else {
+          window.location.href = activeServerUrl + "/index.html";
+        }
+      }
+
+      requestAnimationFrame(step);
+    }
+
+    // Stop auto redirect if user interacts with buttons
+    [btnLaunchTDM, btnLaunchASD, btnCopyLink].forEach(btn => {
+      btn.addEventListener("click", () => {
+        isRedirecting = false;
+        document.getElementById("redirectNotice").innerText = "تم إيقاف التحويل التلقائي لتنفيذ اختيارك";
+        progressEl.style.width = "100%";
+      });
+    });
+
+    // Run fetch on load
+    fetchActiveUrl();
+  </script>
+</body>
+</html>

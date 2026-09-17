@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  atube-server:
+    build: .
+    container_name: atube-tv-gateway
+    restart: unless-stopped
+    ports:
+      - "8085:8085"
+    volumes:
+      - ./config:/app/config
+      - ./logs:/app/logs
+      - ./data:/app/data
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8085
+      - DEBUG=0

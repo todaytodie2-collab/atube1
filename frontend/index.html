@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>A TuBe - منصة البث التلفزيونية والسينمائية الفاخرة</title>
+    
+    <!-- Meta & Mobile App Tags -->
+    <meta name="description" content="منصة A TuBe Ultra HD لمشاهدة أحدث الأفلام والمسلسلات والأنمي وعروض WWE والقنوات المباشرة بجودة 4K.">
+    <link rel="icon" type="image/png" href="assets/icon.png">
+    <link rel="shortcut icon" type="image/png" href="assets/icon.png">
+    <link rel="apple-touch-icon" href="assets/icon.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/tv.css?v=2.5.5">
+
+    <!-- HLS.js for direct video streaming -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8/dist/hls.min.js"></script>
+</head>
+<body>
+
+    <!-- ========================================================================
+         1. SMART SPLASH SCREEN (Matches Mockup 2)
+         ======================================================================== -->
+    <div id="splash-screen">
+        <div class="splash-backdrop" id="splash-backdrop"></div>
+        <div class="splash-content">
+            <div class="splash-logo-wrap">
+                <img src="assets/icon.png" alt="A TuBe Icon" class="splash-icon">
+                <div class="splash-brand-text">A<span>tube</span></div>
+            </div>
+            
+            <div class="splash-progress-container">
+                <div class="splash-progress-bar" id="splash-progress-bar"></div>
+            </div>
+
+            <div class="splash-status-ar" id="splash-status-ar">جاري فحص الاتصال بالخادم الرئيسي...</div>
+            <div class="splash-status-en">Preparing your Atube experience...</div>
+        </div>
+
+        <!-- Dynamic Marquee of Recent Posters -->
+        <div class="splash-marquee-wrap">
+            <div class="splash-marquee-track" id="splash-marquee-track">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================
+         2. MAIN APP ROOT (Matches Mockup 1)
+         ======================================================================== -->
+    <div id="app-root" class="app-layout">
+
+        <!-- RTL TV Sidebar Navigation -->
+        <aside class="tv-sidebar sidebar" id="tv-sidebar">
+            <div class="sidebar-logo-area">
+                <img src="assets/icon.png" alt="A TuBe Logo" class="sidebar-logo-icon">
+                <div class="sidebar-brand-name">A<span>tube</span></div>
+            </div>
+
+            <nav class="sidebar-menu" id="sidebar-menu">
+                <a href="#home" class="sidebar-item focusable active" data-tab="home" tabindex="0">
+                    <span class="sidebar-item-icon">🏠</span>
+                    <span class="sidebar-item-label">الرئيسية</span>
+                </a>
+                <a href="#series" class="sidebar-item focusable" data-tab="series" tabindex="0">
+                    <span class="sidebar-item-icon">📅</span>
+                    <span class="sidebar-item-label">مسلسلات</span>
+                </a>
+                <a href="#series-arabic" class="sidebar-item focusable" data-tab="series-arabic" tabindex="0">
+                    <span class="sidebar-item-icon">🌙</span>
+                    <span class="sidebar-item-label">مسلسلات عربي</span>
+                </a>
+                <a href="#movies" class="sidebar-item focusable" data-tab="movies" tabindex="0">
+                    <span class="sidebar-item-icon">🎬</span>
+                    <span class="sidebar-item-label">أفلام</span>
+                </a>
+                <a href="#movies-arabic" class="sidebar-item focusable" data-tab="movies-arabic" tabindex="0">
+                    <span class="sidebar-item-icon">🍿</span>
+                    <span class="sidebar-item-label">أفلام عربي</span>
+                </a>
+                <a href="#anime" class="sidebar-item focusable" data-tab="anime" tabindex="0">
+                    <span class="sidebar-item-icon">⛩️</span>
+                    <span class="sidebar-item-label">أنمي</span>
+                </a>
+                <a href="#wwe" class="sidebar-item focusable" data-tab="wwe" tabindex="0">
+                    <span class="sidebar-item-icon">🤼</span>
+                    <span class="sidebar-item-label">مصارعة WWE</span>
+                </a>
+                <a href="#atube" class="sidebar-item focusable" data-tab="atube" tabindex="0">
+                    <span class="sidebar-item-icon">🔴</span>
+                    <span class="sidebar-item-label">عالم Atube</span>
+                </a>
+                <a href="#live-tv" class="sidebar-item focusable" data-tab="live_tv" tabindex="0">
+                    <span class="sidebar-item-icon">📺</span>
+                    <span class="sidebar-item-label">قنوات مباشرة</span>
+                </a>
+                <a href="#favorites" class="sidebar-item focusable" data-tab="favorites" tabindex="0">
+                    <span class="sidebar-item-icon">🤍</span>
+                    <span class="sidebar-item-label">المفضلة</span>
+                </a>
+                <a href="#search" class="sidebar-item focusable" data-tab="search" tabindex="0">
+                    <span class="sidebar-item-icon">🔍</span>
+                    <span class="sidebar-item-label">بحث</span>
+                </a>
+                <a href="#settings" class="sidebar-item focusable" data-tab="settings" tabindex="0">
+                    <span class="sidebar-item-icon">⚙️</span>
+                    <span class="sidebar-item-label">إعدادات</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-wrapper main-content" id="main-wrapper">
+
+            <!-- Top Header Bar -->
+            <header class="top-header">
+                <div class="header-left-brand">
+                    <div class="header-logo-text">A<span>tube</span></div>
+                </div>
+
+                <div class="header-user-status">
+                    <div class="live-clock-pill" id="live-clock">8:30 PM</div>
+                    <div class="active-profile-pill focusable" id="profile-btn" tabindex="0" role="button">
+                        <img src="assets/app_icon.jpg" alt="Avatar" class="profile-avatar-mini" id="header-avatar">
+                        <span id="header-user-name">أحمد</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Hero Banner (~70vh, Matches Mockup 1: The Crown) -->
+            <section class="hero-banner" id="hero-banner">
+                <img src="https://image.tmdb.org/t/p/original/8VXhcrl5z2I1zEU9X3pkkNrZlD.jpg" alt="The Crown Backdrop" class="hero-backdrop-img" id="hero-backdrop-img" onerror="this.onerror=null;this.src='assets/default_backdrop.jpg';">
+                <div class="hero-overlay-gradient"></div>
+
+                <div class="hero-info">
+                    <div class="hero-badge-tag">🔥 العمل الأبرز اليوم • 4K HDR</div>
+                    <h1 class="hero-title" id="hero-title">الملكة إليزابيث</h1>
+                    <div class="hero-subtitle" id="hero-subtitle">ذا كراون</div>
+
+                    <div class="hero-meta-row">
+                        <span class="hero-rating" id="hero-rating">★ 8.7</span>
+                        <span>•</span>
+                        <span id="hero-year">2024</span>
+                        <span>•</span>
+                        <span id="hero-quality">4K Ultra HD</span>
+                        <span>•</span>
+                        <span id="hero-duration">58 دقيقة</span>
+                    </div>
+
+                    <p class="hero-synopsis" id="hero-synopsis">
+                        ذا كراون (إليزابيث 2) الملكة إليزابيث، تتبع مسيرة الملكة إليزابيث الثانية السياسية والخاصة على مدى عقود مضت من الحكم، والضغوطات والقرارات التاريخية التي صنعت بريطانيا الحديثة.
+                    </p>
+
+                    <div class="hero-actions">
+                        <button class="btn-primary focusable" id="hero-btn-play" tabindex="0">
+                            <span>▶</span> تشغيل
+                        </button>
+                        <button class="btn-secondary focusable" id="hero-btn-watchlist" tabindex="0">
+                            <span>🔖</span> قائمة المشاهدة
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Genres & Regions Interactive Filter Bar (Hidden on Home, Active in Movies/Series) -->
+            <div class="filter-bar-container" id="filter-bar">
+                <div class="filter-strip filter-regions-strip">
+                    <span class="filter-strip-label">المنطقة والأصل:</span>
+                    <div class="filter-pills" id="region-pills">
+                        <button class="filter-pill active focusable" data-region="all" tabindex="0">الكل 🌟</button>
+                        <button class="filter-pill focusable" data-region="foreign" tabindex="0">🌍 أجنبي وعالمي</button>
+                        <button class="filter-pill focusable" data-region="arabic" tabindex="0">🇸🇦 عربي</button>
+                        <button class="filter-pill focusable" data-region="turkish" tabindex="0">🇹🇷 تركي</button>
+                        <button class="filter-pill focusable" data-region="asian" tabindex="0">⛩️ آسيوي وأنمي</button>
+                    </div>
+                </div>
+                <div class="filter-strip filter-genres-strip">
+                    <span class="filter-strip-label">التصنيف الفني:</span>
+                    <div class="filter-pills" id="genre-pills">
+                        <button class="filter-pill active focusable" data-genre="all" tabindex="0">جميع التصنيفات</button>
+                        <button class="filter-pill focusable" data-genre="أكشن" tabindex="0">💥 أكشن</button>
+                        <button class="filter-pill focusable" data-genre="دراما" tabindex="0">🎭 دراما</button>
+                        <button class="filter-pill focusable" data-genre="كوميديا" tabindex="0">😂 كوميديا</button>
+                        <button class="filter-pill focusable" data-genre="رعب" tabindex="0">👻 رعب وغموض</button>
+                        <button class="filter-pill focusable" data-genre="خيال علمي" tabindex="0">🚀 خيال علمي</button>
+                        <button class="filter-pill focusable" data-genre="مغامرة" tabindex="0">⚔️ مغامرات وتاريخي</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Content Sections (Rows 1, 2, 3...) -->
+            <div class="content-sections" id="content-sections">
+                <!-- Dynamically populated by app.js -->
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ========================================================================
+         3. OSCAR TV STYLE MEDIA DETAILS MODAL
+         ======================================================================== -->
+    <div id="details-modal" class="oscar-details-modal">
+        <!-- Ambient Backdrop Banner -->
+        <div class="oscar-backdrop-wrap">
+            <img src="assets/default_backdrop.jpg" alt="Backdrop" class="oscar-backdrop-img" id="details-backdrop-bg">
+            <div class="oscar-backdrop-gradient"></div>
+        </div>
+
+        <div class="oscar-details-header-nav">
+            <button class="oscar-nav-btn focusable" id="details-close-btn" tabindex="0" title="رجوع">➜</button>
+            <div class="oscar-nav-actions">
+                <button class="oscar-icon-btn focusable" id="btn-fav-detail" tabindex="0" title="المفضلة">🤍</button>
+                <button class="oscar-icon-btn focusable" id="btn-share-detail" tabindex="0" title="مشاركة">🔗</button>
+            </div>
+        </div>
+
+        <div class="oscar-details-container">
+            <!-- Top Hero Row (Poster + Metadata + Main Watch Button) -->
+            <div class="oscar-hero-row">
+                <div class="oscar-poster-wrap">
+                    <img src="assets/app_icon.jpg" alt="Poster" class="oscar-poster-img" id="details-poster">
+                </div>
+                <div class="oscar-meta-col">
+                    <h1 class="oscar-title" id="details-title">عنوان العمل</h1>
+                    <div class="oscar-subtitle" id="details-subtitle">Title English</div>
+
+                    <div class="oscar-tags-row" id="details-meta-tags">
+                        <span class="oscar-tag-pill" id="tag-year">2026</span>
+                        <span class="oscar-tag-pill" id="tag-country">أمريكا</span>
+                        <span class="oscar-tag-pill tag-highlight" id="tag-trans">مترجم</span>
+                        <span class="oscar-tag-pill tag-quality" id="tag-quality">WEB-DL</span>
+                        <span class="oscar-tag-pill" id="tag-genre">أكشن</span>
+                    </div>
+
+                    <!-- Stats Row -->
+                    <div class="oscar-stats-row">
+                        <span class="oscar-stat-item">ℹ️ المعلومات</span>
+                        <span class="oscar-stat-sep">•</span>
+                        <span class="oscar-stat-item" id="stat-rating">★ 8.8</span>
+                        <span class="oscar-stat-sep">•</span>
+                        <span class="oscar-stat-item">👁️ 11.4K</span>
+                        <span class="oscar-stat-sep">•</span>
+                        <span class="oscar-stat-item">🎬 السينما</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Action Buttons Matching Oscar TV -->
+            <div class="oscar-action-buttons">
+                <button class="oscar-btn-watch focusable" id="details-btn-watch" tabindex="0">
+                    <span>▶</span> مشاهدة
+                </button>
+                <button class="oscar-btn-download focusable" id="details-btn-download" tabindex="0">
+                    <span>📥</span> تحميل
+                </button>
+            </div>
+
+            <!-- Story Section -->
+            <div class="oscar-section">
+                <div class="oscar-section-heading">
+                    <span class="oscar-red-bar"></span>
+                    <span>القصة</span>
+                </div>
+                <p class="oscar-synopsis" id="details-synopsis">
+                    تتناول القصة محارباً قديماً يعاني من الإدمان ويعمل سائقاً لخدمة مشاركة الركوب، حيث يساعد راكباً مذعوراً على الهروب من عصابة للاتجار بالبشر تخدم عملاء أثرياء.
+                </p>
+            </div>
+
+            <!-- Cast Section (Circular Avatars with Red Border) -->
+            <div class="oscar-section" id="details-cast-section">
+                <div class="oscar-section-heading">
+                    <span class="oscar-red-bar"></span>
+                    <span>الممثلين</span>
+                </div>
+                <div class="oscar-cast-scroll" id="details-cast">
+                    <!-- Populated dynamically with circular avatars -->
+                </div>
+            </div>
+
+            <!-- Crew Section (Director & Writer) -->
+            <div class="oscar-section" id="details-crew-section">
+                <div class="oscar-section-heading">
+                    <span class="oscar-red-bar"></span>
+                    <span>فريق العمل</span>
+                </div>
+                <div class="oscar-crew-row" id="details-crew">
+                    <div class="crew-card">
+                        <div class="crew-avatar-placeholder">👤</div>
+                        <div class="crew-name" id="crew-director-name">Lauren Bond</div>
+                        <span class="crew-role-badge">المخرج</span>
+                    </div>
+                    <div class="crew-card">
+                        <div class="crew-avatar-placeholder">✍️</div>
+                        <div class="crew-name" id="crew-writer-name">Jim Carlson</div>
+                        <span class="crew-role-badge">المؤلف</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Series Episodes Section (Only shown for Series) -->
+            <div class="oscar-section" id="details-episodes-section">
+                <div class="oscar-section-heading">
+                    <span class="oscar-red-bar"></span>
+                    <span>الحلقات</span>
+                </div>
+                <div id="details-episodes"></div>
+            </div>
+
+            <!-- Recommended Section Matching Oscar TV -->
+            <div class="oscar-section" id="details-recommended-section">
+                <div class="oscar-section-heading">
+                    <span class="oscar-red-bar"></span>
+                    <span>موصى به</span>
+                    <span class="oscar-rec-sub" id="rec-subtitle">لأنك شاهدت هذا العمل</span>
+                </div>
+                <div class="oscar-rec-cards-row" id="details-recommendations">
+                    <!-- Populated dynamically with cards -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================
+         4. OSCAR TV SERVERS BOTTOM SHEET ("روابط المشاهدة")
+         ======================================================================== -->
+    <div id="servers-bottom-sheet" class="bottom-sheet-overlay">
+        <div class="bottom-sheet-card">
+            <div class="bottom-sheet-drag-handle"></div>
+            <div class="bottom-sheet-header">
+                <h3 class="bottom-sheet-title">روابط المشاهدة</h3>
+                <button class="bottom-sheet-close focusable" id="sheet-close-btn" tabindex="0">✕</button>
+            </div>
+
+            <!-- Player Choice Selector Bar -->
+            <div class="player-selector-bar">
+                <span class="player-sel-label">التشغيل التلقائي عبر:</span>
+                <div class="player-chips-row">
+                    <button class="player-chip active focusable" id="chip-tdm" data-player="tdm" tabindex="0">⚡ TDM Player</button>
+                    <button class="player-chip focusable" id="chip-asd" data-player="asd" tabindex="0">🚀 ASD Player</button>
+                    <button class="player-chip focusable" id="chip-system" data-player="system" tabindex="0">📱 مشغل النظام</button>
+                </div>
+            </div>
+
+            <!-- Server Quality Groups -->
+            <div class="bottom-sheet-body" id="sheet-servers-list">
+                <!-- Dynamically populated: 1080P, 720P, 480P, 360P, متعدد -->
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================================================
+         5. 6-PROFILES SWITCHER MODAL
+         ======================================================================== -->
+    <div id="profiles-modal">
+        <div class="profiles-dialog">
+            <button class="details-modal-close focusable modal-close-offset" id="profiles-close-btn" tabindex="0">✕</button>
+            <h2 class="profiles-title">من يُشاهد الآن؟</h2>
+            <div class="profiles-grid" id="profiles-grid">
+                <!-- Dynamically populated with 6 profiles -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================
+         6. VIDEO PLAYER CONTAINER (With 15s Anti-Ad Countdown Screen)
+         ======================================================================== -->
+    <div id="player-container">
+        <!-- 15s Anti-Ad Countdown Screen -->
+        <div class="anti-ad-screen anti-ad-screen-init" id="anti-ad-countdown">
+            <div class="anti-ad-circle" id="countdown-number">15</div>
+            <div class="anti-ad-title">جاري امتصاص وحجب إعلانات المصدر وتجهيز البث النظيف...</div>
+            <div class="anti-ad-sub">سيبدأ الفيديو تلقائياً خلال ثوانٍ معدودة</div>
+            <button class="btn-primary focusable btn-skip-offset" id="btn-skip-countdown" tabindex="0">تخطي العد التنازلي ⚡</button>
+        </div>
+
+        <video id="main-video"></video>
+
+        <!-- Player Controls Overlay -->
+        <div class="player-controls-overlay" id="player-controls-overlay">
+            <div class="player-progress-bar" id="player-progress-bar">
+                <div class="player-progress-fill" id="player-progress-fill"></div>
+            </div>
+            <div class="player-buttons-row">
+                <div class="player-controls-left">
+                    <span id="player-time-current" class="player-time-curr">00:00</span>
+                    <span class="player-time-sep">/</span>
+                    <span id="player-time-duration" class="player-time-total">00:00</span>
+                </div>
+                <div class="player-controls-right">
+                    <span class="player-quality-badge">4K Ultra HD</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Double-Back Exit Toast -->
+    <div id="exit-toast"></div>
+
+    <!-- Core Scripts -->
+    <script src="js/api.js?v=2.5.5"></script>
+    <script src="js/profiles.js?v=2.5.5"></script>
+    <script src="js/navigation.js?v=2.5.5"></script>
+    <script src="js/player.js?v=2.5.5"></script>
+    <script src="js/app.js?v=2.5.5"></script>
+
+</body>
+</html>
