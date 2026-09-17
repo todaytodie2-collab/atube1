@@ -28,16 +28,56 @@ class VODRepository:
         params = []
 
         if content_type and content_type != "all":
-            conditions.append("(content_type = ? OR type = ?)")
-            params.extend([content_type, content_type])
+            if content_type == "anime":
+                conditions.append("(category LIKE '%anime%' OR genres LIKE '%anime%' OR genres LIKE '%أنمي%')")
+            elif content_type == "wwe":
+                conditions.append("(category LIKE '%wwe%' OR title LIKE '%wwe%' OR title LIKE '%مصارعة%')")
+            elif content_type == "atube":
+                conditions.append("(category LIKE '%atube%' OR quality LIKE '%4K%' OR quality LIKE '%FHD%')")
+            else:
+                conditions.append("content_type = ?")
+                params.append(content_type)
+
+        order_by = "ORDER BY updated_at DESC, id DESC"
 
         if category and category != "all":
-            if category in ("recent", "trending_sa", "wwe_ppv", "anime_trending", "atube_originals"):
-                conditions.append("(sub_category = ? OR category = ?)")
-                params.extend([category, category])
+            if category in ("recent", "latest"):
+                order_by = "ORDER BY updated_at DESC, id DESC"
+            elif category in ("trending_sa", "trending", "top_rated"):
+                order_by = "ORDER BY rating DESC, updated_at DESC, id DESC"
+            elif category in ("arabic", "arabic_movies", "arabic_films"):
+                conditions.append("(category = 'arabic_movies' OR (content_type = 'movie' AND category = 'arabic'))")
+            elif category in ("arabic_series",):
+                conditions.append("(category = 'arabic_series' OR (content_type = 'series' AND category = 'arabic'))")
+            elif category in ("foreign", "foreign_movies", "foreign_films"):
+                conditions.append("(category = 'foreign_movies' OR (content_type = 'movie' AND category IN ('foreign', 'movie')))")
+            elif category in ("foreign_series",):
+                conditions.append("(category = 'foreign_series' OR (content_type = 'series' AND category IN ('foreign', 'series')))")
+            elif category in ("turkish", "turkish_movies", "turkish_films"):
+                conditions.append("(category = 'turkish_movies' OR (content_type = 'movie' AND category = 'turkish'))")
+            elif category in ("turkish_series",):
+                conditions.append("(category = 'turkish_series' OR (content_type = 'series' AND category = 'turkish'))")
+            elif category in ("asian", "korean", "asian_movies", "korean_movies"):
+                conditions.append("(category IN ('asian_movies', 'korean_movies') OR (content_type = 'movie' AND category IN ('asian', 'korean')))")
+            elif category in ("korean_series", "asian_series"):
+                conditions.append("(category IN ('korean_series', 'asian_series') OR (content_type = 'series' AND category IN ('asian', 'korean')))")
+            elif category in ("indian", "hindi", "indian_movies", "hindi_movies"):
+                conditions.append("(category IN ('indian_movies', 'hindi_movies') OR (content_type = 'movie' AND category IN ('indian', 'hindi')))")
+            elif category in ("indian_series", "hindi_series"):
+                conditions.append("(category IN ('indian_series', 'hindi_series') OR (content_type = 'series' AND category IN ('indian', 'hindi')))")
+            elif category in ("anime_movies",):
+                conditions.append("(category = 'anime_movies' OR (content_type = 'movie' AND category = 'anime'))")
+            elif category in ("anime_series",):
+                conditions.append("(category = 'anime_series' OR (content_type = 'series' AND category = 'anime'))")
+            elif category in ("anime",):
+                conditions.append("(category LIKE '%anime%' OR genres LIKE '%anime%' OR genres LIKE '%أنمي%')")
+            elif category in ("wwe", "wwe_shows"):
+                conditions.append("(category LIKE '%wwe%' OR title LIKE '%wwe%' OR title LIKE '%مصارعة%')")
+            elif category in ("atube", "atube_originals"):
+                conditions.append("(category LIKE '%atube%' OR quality LIKE '%4K%' OR quality LIKE '%FHD%')")
             else:
-                conditions.append("(category = ? OR content_type = ?)")
-                params.extend([category, category])
+                conditions.append("(category = ? OR category LIKE ?)")
+                params.extend([category, f"%{category}%"])
 
         if search:
             s = f"%{search.strip()}%"
@@ -54,7 +94,7 @@ class VODRepository:
         query = f"""
             SELECT * FROM vod_media 
             {where_clause} 
-            ORDER BY updated_at DESC, id DESC 
+            {order_by} 
             LIMIT ? OFFSET ?
         """
         cur.execute(query, tuple(params + [limit, offset]))
@@ -596,4 +636,70 @@ class VODRepository:
             "total_episodes": total_episodes,
             "db_path": DB_PATH
         }
+
+    @classmethod
+    def get_recent_episodes(cls, category: str = "all", limit: int = 16) -> List[Dict[str, Any]]:
+        """Retrieves recent episodes joined with series metadata."""
+        conn = get_db_connection()
+        cur = conn.cursor()
+        conditions = []
+        params = []
+
+        if category and category != "all":
+            if category in ("arabic", "arabic_series"):
+                conditions.append("(m.category LIKE '%arabic%' OR m.country = 'مصر' OR m.language LIKE '%عربي%')")
+            elif category in ("foreign", "foreign_series"):
+                conditions.append("(m.category LIKE '%foreign%' OR m.language != 'عربي')")
+            elif category in ("turkish", "turkish_series"):
+                conditions.append("(m.category LIKE '%turkish%' OR m.country = 'تركيا')")
+            elif category in ("anime", "anime_series"):
+                conditions.append("(m.category LIKE '%anime%' OR m.genres LIKE '%أنمي%')")
+
+        where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
+        query = f"""
+            SELECT 
+                e.id AS ep_id,
+                e.media_id,
+                e.season_number,
+                e.episode_number,
+                e.episode_title,
+                e.thumbnail,
+                e.duration,
+                m.title AS series_title,
+                m.arabic_title AS series_arabic_title,
+                m.poster AS series_poster,
+                m.backdrop AS series_backdrop,
+                m.category AS series_category,
+                m.quality AS series_quality
+            FROM vod_episodes e
+            JOIN vod_media m ON e.media_id = m.id
+            {where_clause}
+            ORDER BY e.id DESC
+            LIMIT ?
+        """
+        cur.execute(query, tuple(params + [limit]))
+        rows = cur.fetchall()
+
+        episodes = []
+        for r in rows:
+            d = dict(r)
+            episodes.append({
+                "id": d.get("ep_id"),
+                "media_id": d.get("media_id"),
+                "season_number": d.get("season_number") or 1,
+                "episode_number": d.get("episode_number") or 1,
+                "episode_title": d.get("episode_title") or f"الحلقة {d.get('episode_number')}",
+                "thumbnail": d.get("thumbnail") or d.get("series_backdrop") or d.get("series_poster") or "assets/default_episode_thumb.jpg",
+                "duration": d.get("duration") or "45:00",
+                "series_title": d.get("series_title") or "",
+                "series_arabic_title": d.get("series_arabic_title") or d.get("series_title") or "",
+                "poster": d.get("series_poster") or "",
+                "backdrop": d.get("series_backdrop") or d.get("series_poster") or "",
+                "category": d.get("series_category") or "series",
+                "quality": d.get("series_quality") or "1080p FHD"
+            })
+
+        conn.close()
+        return episodes
+
 

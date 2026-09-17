@@ -2,7 +2,7 @@
   {
     "id": "live_eishha_iraqia-general",
     "name": "العراق الفضائية",
-    "category": "قنوات عراقية 🇮🇶",
+    "category": "قنوات عربية 📡",
     "logo": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgFkIMSvDzMQgzT39c679FJUyk4GwSy8vzwsot8YqpH0TEjckzbHhj9dy_oDDLWJN8nH7bCgyOtvH0o2UT0IFn8DpjBAf8hyTmLANBbUzh5O8FX9yIC7WQKNmIwGG55dJ5Ujv7_BNwZQIZlgVok9C-YgiYPjiFWXCttZkjupAOdYYTWIHWf8gX-ReXJaS4/s800/iraq.webp",
     "badge": "LIVE HD",
     "quality": "1080p FHD",
@@ -19,21 +19,22 @@
         "symbol_rate": "27500"
       }
     ],
-    "desc": "تُعد قناة العراق الفضائية من القنوات العراقية الرسمية التي تقدم محتوى إعلاميًا متنوعًا يجمع بين الأخبار والبرامج الثقافية والاجتماعية والسياسية، وتحرص على نقل أبرز الأحداث والتطورات المحلية والعربية والدولية للمشاهدين على مدار اليوم.",
+    "desc": "قناة العراقية الرسمية - برامج ثقافية واجتماعية وسياسية وأخبار على مدار اليوم.",
     "status": "online",
     "license": "Free-to-Air Public Web Broadcast",
-    "source": "Eishha Live Network"
+    "source": "Eishha Live Network",
+    "verified": true
   },
   {
     "id": "live_eishha_iraqia-sports",
-    "name": "العراق الرياضية",
-    "category": "قنوات عراقية 🇮🇶",
+    "name": "العراقية الرياضية",
+    "category": "قنوات رياضية ⚽",
     "logo": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnu8ntkBN161V0A8QLr2QjHdGukSuThHZ41LY8JDElMJNrVf4Kbr0idcEFgqpoL0SJteQihAOq4frgiYEjXkmZzIWWHTF7kRGuQXW19767yRbCXfZUw3ryo0Y5pMaabXTNihJHmFklb8JwYRfbT0Yg6o8avkFc-EeFNMP1K8cYPY32bwH_1BQ28SgqfJw/s800/iraq-sport.webp",
     "badge": "LIVE HD",
     "quality": "1080p FHD",
     "resolution": "FHD",
     "duration": "بث حي ومباشر",
-    "streamUrl": "https://player.eishha.com/p/iraqia-sports.html",
+    "streamUrl": "https://imn-live.esite-lab.com/hls/iraqia-sports-1.m3u8",
     "directHls": "https://imn-live.esite-lab.com/hls/iraqia-sports-1.m3u8",
     "embedUrl": "https://player.eishha.com/p/iraqia-sports.html",
     "frequencies": [
@@ -44,10 +45,11 @@
         "symbol_rate": "27500"
       }
     ],
-    "desc": "تُعد قناة العراق الرياضية من أبرز القنوات الرياضية العراقية المتخصصة في نقل الأحداث والبطولات الرياضية، حيث تحظى بمتابعة واسعة من عشاق كرة القدم والرياضة داخل العراق وخارجه. وتقدم القناة تغطية مستمرة لأهم المنافسات المحلية والإقليمية إلى جانب البرامج الرياضية والتحليلية المتنوعة.",
+    "desc": "قناة العراق الرياضية لنقل مباريات دوري نجوم العراق والبطولات المحلية.",
     "status": "online",
     "license": "Free-to-Air Public Web Broadcast",
-    "source": "Eishha Live Network"
+    "source": "Eishha Live Network",
+    "verified": false
   },
   {
     "id": "live_eishha_al-rasheed",
@@ -72,7 +74,8 @@
     "desc": "تُعد قناة الرشيد العراقية من القنوات الفضائية المعروفة في العراق، حيث تقدم محتوى إعلاميًا متنوعًا يجمع بين الأخبار والبرامج الحوارية والتقارير الميدانية إلى جانب مجموعة من البرامج الاجتماعية والثقافية التي تهم المشاهد العربي. وتحرص القناة على نقل الأحداث المحلية والإقليمية بصورة مستمرة مع التركيز على القضايا التي تشغل الرأي العام العراقي.",
     "status": "online",
     "license": "Free-to-Air Public Web Broadcast",
-    "source": "Eishha Live Network"
+    "source": "Eishha Live Network",
+    "verified": true
   },
   {
     "id": "live_eishha_elheddaf",
@@ -97,7 +100,8 @@
     "desc": "تُعد قناة الهداف من أبرز القنوات الرياضية الجزائرية المتخصصة في متابعة أخبار كرة القدم والبطولات المحلية والعالمية، حيث تقدم تغطية متواصلة للأحداث الرياضية التي تحظى باهتمام الجماهير في الجزائر والوطن العربي.",
     "status": "online",
     "license": "Free-to-Air Public Web Broadcast",
-    "source": "Eishha Live Network"
+    "source": "Eishha Live Network",
+    "verified": true
   },
   {
     "id": "live_eishha_aljadeed",
@@ -128,7 +132,8 @@
     "desc": "تُعد قناة الجديد اللبنانية (Al Jadeed TV) من أبرز القنوات الإعلامية في لبنان، وتتميز بتقديم محتوى إخباري واجتماعي متنوع يغطي الأحداث المحلية والإقليمية بشكل مباشر وتحليلي.",
     "status": "online",
     "license": "Free-to-Air Public Web Broadcast",
-    "source": "Eishha Live Network"
+    "source": "Eishha Live Network",
+    "verified": true
   },
   {
     "id": "live_eishha_mtv-hd",
@@ -159,7 +164,8 @@
     "desc": "تُعد قناة MTV اللبنانية  من أبرز القنوات الإعلامية في لبنان، وتقدم محتوى متنوع يجمع بين الأخبار والبرامج الحوارية والترفيهية، مع تغطية شاملة للأحداث المحلية والإقليمية.",
     "status": "online",
     "license": "Free-to-Air Public Web Broadcast",
-    "source": "Eishha Live Network"
+    "source": "Eishha Live Network",
+    "verified": true
   },
   {
     "id": "live_eishha_dubai-zaman",
@@ -190,7 +196,8 @@
     "desc": "تُعد قناة دبي زمان من القنوات التراثية التي تعيد إحياء روح الماضي من خلال عرض مجموعة من البرامج والمسلسلات القديمة التي شكلت جزءًا مهمًا من تاريخ الإعلام العربي، حيث تقدم تجربة مشاهدة هادئة تعكس أجواء الزمن الجميل.",
     "status": "online",
     "license": "Free-to-Air Public Web Broadcast",
-    "source": "Eishha Live Network"
+    "source": "Eishha Live Network",
+    "verified": true
   },
   {
     "id": "live_eishha_noor-dubai",
@@ -221,7 +228,8 @@
     "desc": "تُعد قناة نور دبي بث مباشر واحدة من القنوات الإعلامية التي تقدم محتوى هادف يجمع بين التوعية الدينية والبرامج الاجتماعية والثقافية، حيث تركز على تقديم محتوى متوازن يخاطب الأسرة العربية بأسلوب هادئ وبسيط.",
     "status": "online",
     "license": "Free-to-Air Public Web Broadcast",
-    "source": "Eishha Live Network"
+    "source": "Eishha Live Network",
+    "verified": true
   },
   {
     "id": "live_eishha_sbc",
@@ -252,7 +260,8 @@
     "desc": "تُعد قناة SBC السعودية من القنوات الترفيهية الحديثة التي تهدف إلى تقديم محتوى سعودي وعربي متنوع يجمع بين البرامج الحوارية والدرامية والترفيهية، مع طابع عصري يناسب مختلف فئات الجمهور.",
     "status": "online",
     "license": "Free-to-Air Public Web Broadcast",
-    "source": "Eishha Live Network"
+    "source": "Eishha Live Network",
+    "verified": true
   },
   {
     "id": "live_eishha_sumaria",
@@ -283,7 +292,8 @@
     "desc": "تُعد قناة السومرية (Alsumaria TV) من أبرز القنوات العراقية التي تقدم مزيجًا من البرامج الترفيهية والاجتماعية إلى جانب المحتوى الدرامي، مع أسلوب عرض يركز على القضايا التي تهم المشاهد العراقي والعربي.",
     "status": "online",
     "license": "Free-to-Air Public Web Broadcast",
-    "source": "Eishha Live Network"
+    "source": "Eishha Live Network",
+    "verified": true
   },
   {
     "id": "live_eishha_cairo-wel-nas-1",
@@ -314,7 +324,8 @@
     "desc": "تُعد قناة القاهرة والناس 1 من القنوات المصرية المعروفة التي تقدم محتوى متنوع يجمع بين البرامج الحوارية والمواد الترفيهية، مع اهتمام واضح بمناقشة القضايا الاجتماعية والواقع اليومي داخل المجتمع المصري.",
     "status": "online",
     "license": "Free-to-Air Public Web Broadcast",
-    "source": "Eishha Live Network"
+    "source": "Eishha Live Network",
+    "verified": true
   },
   {
     "id": "live_eishha_cairo-wel-nas-2",
@@ -345,7 +356,8 @@
     "desc": "تُعد قناة القاهرة والناس 2 امتدادًا للقناة الأولى، حيث تقدم محتوى متنوع يركز على البرامج الحوارية والمواد الترفيهية مع مساحة أكبر لعرض الفقرات المختلفة بشكل أكثر تنوعًا ومرونة.",
     "status": "online",
     "license": "Free-to-Air Public Web Broadcast",
-    "source": "Eishha Live Network"
+    "source": "Eishha Live Network",
+    "verified": true
   },
   {
     "id": "live_eishha_alnahar-drama",
@@ -376,7 +388,8 @@
     "desc": "تُعد قناة النهار دراما من القنوات المصرية المتخصصة في عرض الأعمال الدرامية، حيث تقدم محتوى متنوعًا من المسلسلات العربية التي تناسب مختلف الأذواق، مع تركيز واضح على الدراما الاجتماعية.",
     "status": "online",
     "license": "Free-to-Air Public Web Broadcast",
-    "source": "Eishha Live Network"
+    "source": "Eishha Live Network",
+    "verified": true
   },
   {
     "id": "live_eishha_alnahar",
@@ -407,7 +420,8 @@
     "desc": "تُعد قناة النهار من أبرز القنوات المصرية الخاصة التي تقدم محتوى إعلامي متنوع يجمع بين البرامج الحوارية والترفيهية والاجتماعية، مع اهتمام واضح بمناقشة القضايا اليومية التي تهم المواطن المصري.",
     "status": "online",
     "license": "Free-to-Air Public Web Broadcast",
-    "source": "Eishha Live Network"
+    "source": "Eishha Live Network",
+    "verified": true
   },
   {
     "id": "live_eishha_zee-aflam",
@@ -438,7 +452,8 @@
     "desc": "تُعد قناة زي أفلام (Zee Aflam) من القنوات المتخصصة في عرض الأفلام والمسلسلات الهندية المدبلجة إلى العربية، وتُعتبر من أكثر القنوات متابعة لعشاق الدراما الهندية في الوطن العربي.",
     "status": "online",
     "license": "Free-to-Air Public Web Broadcast",
-    "source": "Eishha Live Network"
+    "source": "Eishha Live Network",
+    "verified": true
   },
   {
     "id": "live_eishha_zee-alwan",
@@ -2705,37 +2720,6 @@
   },
   {
     "id": "live_eishha_jeem",
-    "name": "جيم للاطفال",
-    "category": "أطفال وعائلة 🧸",
-    "logo": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjLUoq9ZFKLEsKXikLblSFRqDOrrxgAM4ZihMfXIS59B1d0hzFCJlSyYoKqZ8cOnAxV5d6Yl-BpzWpQu8QqIGTrKXnsgs411QARJGAV_WlBOwjBri1q3v_npLvnf6J6qjjh0P4V3tx7jBG3Xkcp6mYdrgPeVJM2SAVWKRsmm0SRezS8SEStrurTSJBBMwU/s800/jeem.webp",
-    "badge": "LIVE HD",
-    "quality": "1080p FHD",
-    "resolution": "FHD",
-    "duration": "بث حي ومباشر",
-    "streamUrl": "https://player.eishha.com/p/jeem.html",
-    "directHls": "",
-    "embedUrl": "https://player.eishha.com/p/jeem.html",
-    "frequencies": [
-      {
-        "satellite": "نايل سات",
-        "frequency": "11564",
-        "polarization": "أفقي (H)",
-        "symbol_rate": "27500"
-      },
-      {
-        "satellite": "عرب سات",
-        "frequency": "11623",
-        "polarization": "عمودي (V)",
-        "symbol_rate": "27500"
-      }
-    ],
-    "desc": "تُعتبر قناة جيم للأطفال واحدة من أبرز القنوات التعليمية الموجهة للصغار في العالم العربي، حيث تقدم محتوى يجمع بين المعرفة والتسلية بأسلوب مبسط يساعد على تنمية مهارات الطفل في مختلف المراحل العمرية.",
-    "status": "online",
-    "license": "Free-to-Air Public Web Broadcast",
-    "source": "Eishha Live Network"
-  },
-  {
-    "id": "live_eishha_jeem",
     "name": "براعم",
     "category": "أطفال وعائلة 🧸",
     "logo": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiaEe74Q9N1vUUiw5RoKEipLVTsft5UMO-xEydF8v95rvKpTwAr6AmmMFkmXGoPKTKgPkzZJ2fEk8CQU9PPCd3zkZ2zYCMH1zJakz-fe0ZLr0-ecOipckWnwxziYM1qLIZXRUDYg5skKd2oCEqhPGLJ1GcUo7f-vreS6Sck_CKXg1ppxjkzDBdOqaKRpg4/s800/baraem.webp",
@@ -3196,37 +3180,6 @@
       }
     ],
     "desc": "تُعتبر قناة الكأس 5 واحدة من القنوات الرياضية التابعة لشبكة الكأس القطرية، وتتميز بتركيزها على تقديم تغطية موسعة للأحداث الكروية مع إبراز التفاصيل الفنية التي تدور داخل أرض الملعب.",
-    "status": "online",
-    "license": "Free-to-Air Public Web Broadcast",
-    "source": "Eishha Live Network"
-  },
-  {
-    "id": "live_eishha_al-kass-6",
-    "name": "الكأس 6",
-    "category": "قنوات رياضية ⚽",
-    "logo": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgGHOGTpK5CCwUI5i5PnZoAW1yK1izc3_5ZDxId4_lvxilgrhRyAeAUbT_5YLsDO4fYV98QBkYfhAZuhpjgkLdiLC_msDIYNONOTdq8_fX4RvoUXzJ8zAPqNVm1O0L69wT33U6DmlLMblZwTAzn7H7ANXvJ9_1JZ6fiwpxwjNHIdpWcvjqO3076BpYXI68/s800/6.webp",
-    "badge": "LIVE HD",
-    "quality": "1080p FHD",
-    "resolution": "FHD",
-    "duration": "بث حي ومباشر",
-    "streamUrl": "https://play.arab-stream.live/p/al-kass-6.html",
-    "directHls": "",
-    "embedUrl": "https://play.arab-stream.live/p/al-kass-6.html",
-    "frequencies": [
-      {
-        "satellite": "نايل سات",
-        "frequency": "11919",
-        "polarization": "أفقي (H)",
-        "symbol_rate": "27500"
-      },
-      {
-        "satellite": "عرب سات",
-        "frequency": "12245",
-        "polarization": "عمودي (V)",
-        "symbol_rate": "27500"
-      }
-    ],
-    "desc": "تأتي قناة الكأس 6 ضمن منظومة قنوات الكأس الرياضية القطرية التي تهدف إلى تقديم تغطية أوسع للأحداث الكروية، مع التركيز على نقل التفاصيل الدقيقة للمباريات والبطولات المختلفة.",
     "status": "online",
     "license": "Free-to-Air Public Web Broadcast",
     "source": "Eishha Live Network"
@@ -4330,5 +4283,83 @@
     "status": "online",
     "license": "Free-to-Air Public Web Broadcast",
     "source": "Eishha Live Network"
+  },
+  {
+    "id": "live_eishha_bein_sports_1",
+    "name": "beIN Sports 1 HD",
+    "category": "قنوات رياضية ⚽",
+    "logo": "https://img.youtube.com/vi/bYwTf8k-Vv4/maxresdefault.jpg",
+    "badge": "4K Ultra HD",
+    "quality": "1080p 60fps",
+    "streamUrl": "https://player.eishha.com/p/bein-1.html",
+    "directHls": "https://live.beinsports.com/hls/bein1.m3u8",
+    "embedUrl": "https://player.eishha.com/p/bein-1.html",
+    "desc": "قناة بي إن سبورتس 1 المشفرة لنقل أقوى البطولات الأوروبية ودوري أبطال أوروبا والدوري الإنجليزي الممتاز.",
+    "status": "online"
+  },
+  {
+    "id": "live_eishha_ssc_1",
+    "name": "SSC Sports 1 HD",
+    "category": "قنوات رياضية ⚽",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/SSC_Logo.svg/1200px-SSC_Logo.svg.png",
+    "badge": "FHD 1080p",
+    "quality": "1080p FHD",
+    "streamUrl": "https://player.eishha.com/p/ssc-1.html",
+    "directHls": "https://ssc-live.shahid.net/hls/ssc1.m3u8",
+    "embedUrl": "https://player.eishha.com/p/ssc-1.html",
+    "desc": "قناة SSC الرياضية السعودية الناقلة لدوري روشن السعودي للمحترفين ودوري أبطال آسيا.",
+    "status": "online"
+  },
+  {
+    "id": "live_eishha_mbc_masr",
+    "name": "MBC مصر",
+    "category": "قنوات ترفيهية 🌟",
+    "logo": "https://upload.wikimedia.org/wikipedia/ar/d/d4/MBC_Masr_logo.png",
+    "badge": "LIVE HD",
+    "quality": "1080p FHD",
+    "streamUrl": "https://player.eishha.com/p/mbc-masr.html",
+    "directHls": "https://mbc-live.shahid.net/hls/mbcmasr.m3u8",
+    "embedUrl": "https://player.eishha.com/p/mbc-masr.html",
+    "desc": "قناة إم بي سي مصر - برامج متنوعة ومسلسلات حصرية وأقوى الإنتاجات المصرية على مدار 24 ساعة.",
+    "status": "online"
+  },
+  {
+    "id": "live_eishha_aljazeera",
+    "name": "الجزيرة الإخبارية",
+    "category": "قنوات إخبارية 📰",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Al_Jazeera_Arabic_logo.svg/1200px-Al_Jazeera_Arabic_logo.svg.png",
+    "badge": "LIVE HD",
+    "quality": "1080p FHD",
+    "streamUrl": "https://live-hls-web-aje.getaj.net/AJE/01.m3u8",
+    "directHls": "https://live-hls-web-aja.getaj.net/AJA/01.m3u8",
+    "embedUrl": "https://player.eishha.com/p/aljazeera.html",
+    "desc": "قناة الجزيرة الإخبارية - تغطية حية ومباشرة للأحداث الإقليمية والعالمية على مدار الساعة.",
+    "status": "online"
+  },
+  {
+    "id": "live_eishha_rotana_cinema",
+    "name": "روتانا سينما",
+    "category": "قنوات ترفيهية 🌟",
+    "logo": "https://upload.wikimedia.org/wikipedia/ar/thumb/8/89/Rotana_Cinema.png/250px-Rotana_Cinema.png",
+    "badge": "LIVE HD",
+    "quality": "1080p FHD",
+    "streamUrl": "https://player.eishha.com/p/rotana-cinema.html",
+    "directHls": "https://rotana-live.shahid.net/hls/rotanacinema.m3u8",
+    "embedUrl": "https://player.eishha.com/p/rotana-cinema.html",
+    "desc": "روتانا سينما - مش هتقدر تغمض عينيك، أحدث وأضخم الأفلام السينمائية العربية على مدار اليوم.",
+    "status": "online"
+  },
+  {
+    "id": "live_eishha_osn_yahala",
+    "name": "OSN يا هلا",
+    "category": "قنوات ترفيهية 🌟",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/OSN_logo_2020.svg/1200px-OSN_logo_2020.svg.png",
+    "badge": "4K Ultra HD",
+    "quality": "1080p FHD",
+    "streamUrl": "https://player.eishha.com/p/osn-yahala.html",
+    "directHls": "https://osn-live.stream/hls/yahala.m3u8",
+    "embedUrl": "https://player.eishha.com/p/osn-yahala.html",
+    "desc": "قناة OSN يا هلا الأولى - عروض مسلسلات عربية وتركية ومدبلجة حصرية بجودة فائقة.",
+    "status": "online"
   }
 ]

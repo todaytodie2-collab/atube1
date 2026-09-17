@@ -75,3 +75,10 @@ def api_episodes():
         return jsonify([])
     episodes = VODDatabaseManager.get_episodes(media_id, season)
     return jsonify(episodes)
+
+@media_bp.route("/api/media/recent-episodes", methods=["GET"])
+def api_recent_episodes():
+    category = request.args.get("category", "all")
+    limit = int(request.args.get("limit", 16))
+    episodes = VODDatabaseManager.get_recent_episodes(category=category, limit=limit)
+    return jsonify(episodes)

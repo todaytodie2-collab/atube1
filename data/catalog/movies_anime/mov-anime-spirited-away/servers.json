@@ -1,0 +1,20 @@
+[
+  {
+    "name": "سيرفر الأنمي السحابي 4K (MegaMax)",
+    "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    "quality": "4K UHD",
+    "badge": "MegaMax"
+  },
+  {
+    "name": "سيرفر Voe السريع 1080P",
+    "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    "quality": "1080p FHD",
+    "badge": "Voe ⚡"
+  },
+  {
+    "name": "سيرفر StreamHG FHD",
+    "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    "quality": "1080p FHD",
+    "badge": "StreamHG"
+  }
+]

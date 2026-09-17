@@ -9,6 +9,7 @@ __pycache__/
 
 # Browser Profiles & Local Session Data
 chrome_user_data/
+atube_browser_profile/
 .playwright/
 
 # Large Binaries and tools that can be downloaded / installed

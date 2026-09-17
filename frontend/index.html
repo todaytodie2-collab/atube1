@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="assets/icon.png">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="css/tv.css?v=2.5.5">
+    <link rel="stylesheet" href="css/tv.css?v=2.7.0">
 
     <!-- HLS.js for direct video streaming -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8/dist/hls.min.js"></script>
@@ -128,6 +128,34 @@
                 </div>
             </header>
 
+            <!-- Oscar TV Telegram Banner Strip -->
+            <div class="oscar-telegram-strip focusable" id="telegram-banner-strip" tabindex="0" role="button">
+                <div class="telegram-icon-box">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.93-1.28 4.88-2.12 5.86-2.54 2.79-1.16 3.37-1.36 3.75-1.36.08 0 .28.02.4.12.1.08.13.2.14.28-.01.07-.01.21-.03.38z"/>
+                    </svg>
+                </div>
+                <div class="telegram-info">
+                    <span class="telegram-tag">القناة الرسمية</span>
+                    <span class="telegram-text">اشترك في القناة الجديدة على تليجرام لمتابعة أحدث الإضافات اليومية 📢</span>
+                </div>
+                <a href="https://t.me/atube_official" target="_blank" class="telegram-join-btn focusable" tabindex="0">إشترك ✈️</a>
+            </div>
+
+            <!-- Oscar TV Live Matches Strip -->
+            <div class="oscar-matches-section" id="matches-section">
+                <div class="matches-header">
+                    <div class="matches-title-wrap">
+                        <span class="matches-live-pulse"></span>
+                        <span class="matches-title">مباريات اليوم المباشرة ⚽</span>
+                    </div>
+                    <span class="matches-sub">نتائج وبث حي ومباشر لأهم المباريات</span>
+                </div>
+                <div class="matches-scroll-track" id="matches-scroll-track">
+                    <!-- Populated dynamically with live match cards -->
+                </div>
+            </div>
+
             <!-- Hero Banner (~70vh, Matches Mockup 1: The Crown) -->
             <section class="hero-banner" id="hero-banner">
                 <img src="https://image.tmdb.org/t/p/original/8VXhcrl5z2I1zEU9X3pkkNrZlD.jpg" alt="The Crown Backdrop" class="hero-backdrop-img" id="hero-backdrop-img" onerror="this.onerror=null;this.src='assets/default_backdrop.jpg';">
@@ -163,28 +191,33 @@
                 </div>
             </section>
 
-            <!-- Genres & Regions Interactive Filter Bar (Hidden on Home, Active in Movies/Series) -->
+            <!-- Genres & Regions Interactive Filter Bar (Hidden on Home, Active in Movies/Series/Anime) -->
             <div class="filter-bar-container" id="filter-bar">
                 <div class="filter-strip filter-regions-strip">
-                    <span class="filter-strip-label">المنطقة والأصل:</span>
+                    <span class="filter-strip-label">الدولة والأصل:</span>
                     <div class="filter-pills" id="region-pills">
                         <button class="filter-pill active focusable" data-region="all" tabindex="0">الكل 🌟</button>
                         <button class="filter-pill focusable" data-region="foreign" tabindex="0">🌍 أجنبي وعالمي</button>
-                        <button class="filter-pill focusable" data-region="arabic" tabindex="0">🇸🇦 عربي</button>
+                        <button class="filter-pill focusable" data-region="arabic" tabindex="0">🇸🇦 عربي ومصري</button>
                         <button class="filter-pill focusable" data-region="turkish" tabindex="0">🇹🇷 تركي</button>
-                        <button class="filter-pill focusable" data-region="asian" tabindex="0">⛩️ آسيوي وأنمي</button>
+                        <button class="filter-pill focusable" data-region="asian" tabindex="0">⛩️ كوري وآسيوي</button>
+                        <button class="filter-pill focusable" data-region="indian" tabindex="0">🕌 هندي وبوليوود</button>
+                        <button class="filter-pill focusable" data-region="anime" tabindex="0">⚡ أنمي ياباني</button>
                     </div>
                 </div>
                 <div class="filter-strip filter-genres-strip">
                     <span class="filter-strip-label">التصنيف الفني:</span>
                     <div class="filter-pills" id="genre-pills">
-                        <button class="filter-pill active focusable" data-genre="all" tabindex="0">جميع التصنيفات</button>
+                        <button class="filter-pill active focusable" data-genre="all" tabindex="0">جميع التصنيفات 🌟</button>
                         <button class="filter-pill focusable" data-genre="أكشن" tabindex="0">💥 أكشن</button>
                         <button class="filter-pill focusable" data-genre="دراما" tabindex="0">🎭 دراما</button>
                         <button class="filter-pill focusable" data-genre="كوميديا" tabindex="0">😂 كوميديا</button>
                         <button class="filter-pill focusable" data-genre="رعب" tabindex="0">👻 رعب وغموض</button>
                         <button class="filter-pill focusable" data-genre="خيال علمي" tabindex="0">🚀 خيال علمي</button>
-                        <button class="filter-pill focusable" data-genre="مغامرة" tabindex="0">⚔️ مغامرات وتاريخي</button>
+                        <button class="filter-pill focusable" data-genre="مغامرة" tabindex="0">⚔️ مغامرة وتاريخي</button>
+                        <button class="filter-pill focusable" data-genre="رومانسي" tabindex="0">💘 رومانسي</button>
+                        <button class="filter-pill focusable" data-genre="جريمة" tabindex="0">🕵️ جريمة وتشويق</button>
+                        <button class="filter-pill focusable" data-genre="وثائقي" tabindex="0">🏆 وثائقي ورياضي</button>
                     </div>
                 </div>
             </div>
@@ -334,11 +367,13 @@
 
             <!-- Player Choice Selector Bar -->
             <div class="player-selector-bar">
-                <span class="player-sel-label">التشغيل التلقائي عبر:</span>
+                <span class="player-sel-label">طريقة التشغيل المفضلة:</span>
                 <div class="player-chips-row">
-                    <button class="player-chip active focusable" id="chip-tdm" data-player="tdm" tabindex="0">⚡ TDM Player</button>
+                    <button class="player-chip active focusable" id="chip-internal" data-player="internal" tabindex="0">⚡ المشغل الداخلي</button>
+                    <button class="player-chip focusable" id="chip-easy" data-player="easy" tabindex="0">🎬 Easy Player</button>
                     <button class="player-chip focusable" id="chip-asd" data-player="asd" tabindex="0">🚀 ASD Player</button>
                     <button class="player-chip focusable" id="chip-system" data-player="system" tabindex="0">📱 مشغل النظام</button>
+                    <button class="player-chip focusable" id="chip-1dm" data-player="1dm" tabindex="0">📥 تحميل 1DM</button>
                 </div>
             </div>
 
@@ -364,46 +399,123 @@
     </div>
 
     <!-- ========================================================================
-         6. VIDEO PLAYER CONTAINER (With 15s Anti-Ad Countdown Screen)
+         6. BUILT-IN LIGHTWEIGHT VIDEO PLAYER CONTAINER
          ======================================================================== -->
     <div id="player-container">
-        <!-- 15s Anti-Ad Countdown Screen -->
-        <div class="anti-ad-screen anti-ad-screen-init" id="anti-ad-countdown">
-            <div class="anti-ad-circle" id="countdown-number">15</div>
-            <div class="anti-ad-title">جاري امتصاص وحجب إعلانات المصدر وتجهيز البث النظيف...</div>
-            <div class="anti-ad-sub">سيبدأ الفيديو تلقائياً خلال ثوانٍ معدودة</div>
-            <button class="btn-primary focusable btn-skip-offset" id="btn-skip-countdown" tabindex="0">تخطي العد التنازلي ⚡</button>
+        <!-- Top Bar with Back Button, Title, and Resolution Badge -->
+        <div class="player-top-bar" id="player-top-bar">
+            <button class="player-top-back-btn focusable" id="player-back-btn" tabindex="0" title="رجوع">
+                <span class="player-back-arrow">➜</span>
+                <span class="player-back-label">رجوع</span>
+            </button>
+            <div class="player-top-info">
+                <span class="player-video-title" id="player-video-title">عنوان الفيديو</span>
+                <span class="player-video-sub" id="player-video-sub"></span>
+            </div>
+            <div class="player-top-actions">
+                <span class="player-quality-badge" id="player-quality-badge">1080p FHD</span>
+                <button class="player-top-ext-btn focusable" id="player-ext-switch-btn" title="تبديل المشغل" tabindex="0">🚀 مشغل خارجي</button>
+            </div>
         </div>
 
+        <!-- Buffer / Loading Spinner -->
+        <div class="player-loader" id="player-loader">
+            <div class="player-spinner"></div>
+            <div class="player-loader-text" id="player-loader-text">جاري تشغيل وتجهيز البث المباشر...</div>
+        </div>
+
+        <!-- Video Element -->
         <video id="main-video"></video>
 
-        <!-- Player Controls Overlay -->
+        <!-- Big Center Play / Pause Indicator -->
+        <div class="player-center-action" id="player-center-action">
+            <div class="player-center-icon" id="player-center-icon">▶</div>
+        </div>
+
+        <!-- Bottom Controls Overlay -->
         <div class="player-controls-overlay" id="player-controls-overlay">
-            <div class="player-progress-bar" id="player-progress-bar">
-                <div class="player-progress-fill" id="player-progress-fill"></div>
+            <!-- Progress / Seek Bar -->
+            <div class="player-progress-container" id="player-progress-container">
+                <div class="player-progress-track" id="player-progress-bar">
+                    <div class="player-progress-buffered" id="player-progress-buffered"></div>
+                    <div class="player-progress-fill" id="player-progress-fill"></div>
+                    <div class="player-progress-handle" id="player-progress-handle"></div>
+                </div>
             </div>
+
+            <!-- Controls Row -->
             <div class="player-buttons-row">
                 <div class="player-controls-left">
-                    <span id="player-time-current" class="player-time-curr">00:00</span>
-                    <span class="player-time-sep">/</span>
-                    <span id="player-time-duration" class="player-time-total">00:00</span>
+                    <button class="player-ctrl-btn focusable" id="player-btn-play" tabindex="0" title="تشغيل / إيقاف مؤقت">
+                        <span class="ctrl-icon" id="player-play-icon">▶</span>
+                    </button>
+                    <button class="player-ctrl-btn focusable" id="player-btn-rwd" tabindex="0" title="تراجع 10 ثواني">
+                        <span>↺ 10s</span>
+                    </button>
+                    <button class="player-ctrl-btn focusable" id="player-btn-fwd" tabindex="0" title="تقديم 10 ثواني">
+                        <span>↻ 10s</span>
+                    </button>
+                    <div class="player-time-display">
+                        <span id="player-time-current" class="player-time-curr">00:00</span>
+                        <span class="player-time-sep">/</span>
+                        <span id="player-time-duration" class="player-time-total">00:00</span>
+                    </div>
                 </div>
+
                 <div class="player-controls-right">
-                    <span class="player-quality-badge">4K Ultra HD</span>
+                    <div class="player-volume-wrap">
+                        <button class="player-ctrl-btn focusable" id="player-btn-volume" tabindex="0" title="كتم / تشغيل الصوت">
+                            <span id="player-volume-icon">🔊</span>
+                        </button>
+                        <input type="range" class="player-volume-slider" id="player-volume-slider" min="0" max="1" step="0.05" value="1" title="مستوى الصوت" aria-label="مستوى الصوت">
+                    </div>
+                    <button class="player-ctrl-btn focusable" id="player-btn-fullscreen" tabindex="0" title="ملء الشاشة">
+                        <span id="player-fullscreen-icon">⛶</span>
+                    </button>
                 </div>
             </div>
         </div>
-    </div>
+    <!-- Oscar TV Bottom Navigation Bar (Mobile / MEmu Android) -->
+    <nav class="oscar-bottom-nav" id="oscar-bottom-nav">
+        <a href="#home" class="oscar-bnav-item active focusable" data-tab="all" tabindex="0">
+            <span class="oscar-bnav-icon">🏠</span>
+            <span class="oscar-bnav-label">الرئيسية</span>
+        </a>
+        <a href="#series" class="oscar-bnav-item focusable" data-tab="series" tabindex="0">
+            <span class="oscar-bnav-icon">🎬</span>
+            <span class="oscar-bnav-label">المسلسلات</span>
+        </a>
+        <a href="#movies" class="oscar-bnav-item focusable" data-tab="movies" tabindex="0">
+            <span class="oscar-bnav-icon">🎞️</span>
+            <span class="oscar-bnav-label">الأفلام</span>
+        </a>
+        <a href="#live-tv" class="oscar-bnav-item focusable" data-tab="live_tv" tabindex="0">
+            <span class="oscar-bnav-icon">📺</span>
+            <span class="oscar-bnav-label">القنوات</span>
+        </a>
+        <a href="#matches" class="oscar-bnav-item focusable" data-tab="matches" tabindex="0">
+            <span class="oscar-bnav-icon">⚽</span>
+            <span class="oscar-bnav-label">المباريات</span>
+        </a>
+        <a href="#anime" class="oscar-bnav-item focusable" data-tab="anime" tabindex="0">
+            <span class="oscar-bnav-icon">⚡</span>
+            <span class="oscar-bnav-label">أنمي</span>
+        </a>
+        <a href="#search" class="oscar-bnav-item focusable" data-tab="search" tabindex="0">
+            <span class="oscar-bnav-icon">🔍</span>
+            <span class="oscar-bnav-label">بحث</span>
+        </a>
+    </nav>
 
     <!-- Double-Back Exit Toast -->
     <div id="exit-toast"></div>
 
     <!-- Core Scripts -->
-    <script src="js/api.js?v=2.5.5"></script>
-    <script src="js/profiles.js?v=2.5.5"></script>
-    <script src="js/navigation.js?v=2.5.5"></script>
-    <script src="js/player.js?v=2.5.5"></script>
-    <script src="js/app.js?v=2.5.5"></script>
+    <script src="js/api.js?v=2.7.1"></script>
+    <script src="js/profiles.js?v=2.7.1"></script>
+    <script src="js/navigation.js?v=2.7.1"></script>
+    <script src="js/player.js?v=2.7.1"></script>
+    <script src="js/app.js?v=2.7.1"></script>
 
 </body>
 </html>

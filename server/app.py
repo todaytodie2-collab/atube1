@@ -78,6 +78,7 @@ def add_cors_headers(response):
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS, HEAD"
     response.headers["Access-Control-Allow-Headers"] = "*"
     response.headers["Access-Control-Expose-Headers"] = "Content-Range, Accept-Ranges, Content-Length, Content-Type"
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     return response
 
 # Static Web App Routes

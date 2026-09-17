@@ -106,9 +106,6 @@ async def run_cloud_harvester(
 ) -> Dict[str, Any]:
     """Executes headless cloud scraping across configured portals."""
     start_time = time.time()
-    db = VODDatabaseManager(DB_PATH)
-    tmdb = TMDBService()
-
     active_providers = target_providers if target_providers else list(HARVESTER_ROUTES_MAP.keys())
     
     summary = {
@@ -201,7 +198,7 @@ async def run_cloud_harvester(
                                 # Metadata parsing & TMDB Enrichment
                                 if content_type == "series":
                                     clean_title, s_num, ep_num = parse_series_title_and_episode(raw_title)
-                                    tmdb_meta = tmdb.get_full_metadata(clean_title, "series")
+                                    tmdb_meta = TMDBService.get_full_metadata(clean_title, content_type="series")
                                     
                                     # Fallback images
                                     final_poster = tmdb_meta.get("poster") or poster_url
@@ -218,36 +215,36 @@ async def run_cloud_harvester(
                                         servers_list = [{"name": f"{prov_name} Live", "url": item_url, "quality": "FHD", "type": "embed"}]
 
                                     # Insert Series + Episode with strict isolation
-                                    series_id, is_new = db.insert_series_episode(
+                                    series_id = VODDatabaseManager.insert_series_episode(
                                         series_title=clean_title,
                                         season_number=s_num,
                                         episode_number=ep_num,
                                         episode_title=f"الحلقة {ep_num}",
                                         servers=servers_list,
                                         category=cat_name,
+                                        link=item_url,
                                         poster=final_poster,
                                         backdrop=final_backdrop,
-                                        rating=tmdb_meta.get("rating", 0.0),
-                                        year=tmdb_meta.get("year", 2024),
-                                        genre=tmdb_meta.get("genre", "مسلسلات"),
-                                        overview=tmdb_meta.get("synopsis") or item_details.get("synopsis") or clean_title,
+                                        rating=str(tmdb_meta.get("rating", "8.0")),
+                                        year=str(tmdb_meta.get("year", "2024")),
+                                        genres=tmdb_meta.get("genres", ["مسلسلات"]),
+                                        synopsis=tmdb_meta.get("synopsis") or item_details.get("synopsis") or f"مشاهدة مسلسل {clean_title} الحلقة {ep_num}",
                                         cast=tmdb_meta.get("cast", [])
                                     )
                                     
-                                    if is_new:
-                                        summary["total_inserted"] += 1
-                                        summary["new_media_items"].append({
-                                            "type": "series",
-                                            "title": clean_title,
-                                            "season": s_num,
-                                            "episode": ep_num,
-                                            "provider": prov_name
-                                        })
-                                        print(f"      [✓ Inserted Series Episode] {clean_title} S{s_num}E{ep_num} ({len(servers_list)} servers)")
+                                    summary["total_inserted"] += 1
+                                    summary["new_media_items"].append({
+                                        "type": "series",
+                                        "title": clean_title,
+                                        "season": s_num,
+                                        "episode": ep_num,
+                                        "provider": prov_name
+                                    })
+                                    print(f"      [✓ Inserted Series Episode] {clean_title} S{s_num}E{ep_num} ({len(servers_list)} servers)")
 
                                 else: # Movie
                                     clean_title = re.sub(r'مترجم|مدبلج|مشاهدة|تحميل|فيلم|HD|FHD|1080p|720p', '', raw_title, flags=re.IGNORECASE).strip(' -_:')
-                                    tmdb_meta = tmdb.get_full_metadata(clean_title, "movie")
+                                    tmdb_meta = TMDBService.get_full_metadata(clean_title, content_type="movie")
                                     
                                     final_poster = tmdb_meta.get("poster") or poster_url
                                     final_backdrop = tmdb_meta.get("backdrop") or poster_url
@@ -263,27 +260,27 @@ async def run_cloud_harvester(
 
                                     media_payload = {
                                         "title": clean_title or raw_title,
-                                        "type": "movie",
+                                        "content_type": "movie",
                                         "category": cat_name,
                                         "poster": final_poster,
                                         "backdrop": final_backdrop,
-                                        "rating": tmdb_meta.get("rating", 0.0),
-                                        "year": tmdb_meta.get("year", 2024),
-                                        "genre": tmdb_meta.get("genre", "أفلام"),
-                                        "synopsis": tmdb_meta.get("synopsis") or item_details.get("synopsis") or clean_title,
+                                        "rating": str(tmdb_meta.get("rating", "8.0")),
+                                        "year": str(tmdb_meta.get("year", "2024")),
+                                        "genres": tmdb_meta.get("genres", ["أفلام"]),
+                                        "synopsis": tmdb_meta.get("synopsis") or item_details.get("synopsis") or f"مشاهدة وتحميل فيلم {clean_title} بجودة عالية.",
                                         "cast": tmdb_meta.get("cast", []),
-                                        "servers": servers_list
+                                        "servers": servers_list,
+                                        "link": item_url
                                     }
 
-                                    media_id, is_new = db.insert_media(media_payload)
-                                    if is_new:
-                                        summary["total_inserted"] += 1
-                                        summary["new_media_items"].append({
-                                            "type": "movie",
-                                            "title": clean_title,
-                                            "provider": prov_name
-                                        })
-                                        print(f"      [✓ Inserted Movie] {clean_title} ({len(servers_list)} servers)")
+                                    media_id = VODDatabaseManager.insert_media(**media_payload)
+                                    summary["total_inserted"] += 1
+                                    summary["new_media_items"].append({
+                                        "type": "movie",
+                                        "title": clean_title,
+                                        "provider": prov_name
+                                    })
+                                    print(f"      [✓ Inserted Movie] {clean_title} ({len(servers_list)} servers)")
 
                                     if export_json:
                                         harvested_export.append(media_payload)

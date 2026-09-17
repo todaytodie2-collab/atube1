@@ -239,7 +239,11 @@ body, html {
 }
 
 body[data-view^="series"] .filter-bar-container,
-body[data-view^="movies"] .filter-bar-container {
+body[data-view^="movies"] .filter-bar-container,
+body[data-view^="anime"] .filter-bar-container,
+body[data-view="series"] .filter-bar-container,
+body[data-view="movies"] .filter-bar-container,
+body[data-view="anime"] .filter-bar-container {
     display: flex !important;
 }
 
@@ -1273,7 +1277,7 @@ body[data-view^="movies"] .filter-bar-container {
 }
 
 /* ==============================================================================
-   VIDEO PLAYER & MODALS (ASDplayer, Hls.js, 15s Countdown)
+   LIGHTWEIGHT INTERNAL VIDEO PLAYER & CONTROLS
    ============================================================================== */
 #player-container {
     position: fixed;
@@ -1281,104 +1285,262 @@ body[data-view^="movies"] .filter-bar-container {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: #000;
-    z-index: 99990;
+    background: #000000;
+    z-index: 100050;
     display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 #player-container.active {
     display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 #main-video {
     width: 100%;
     height: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
     object-fit: contain;
     background: #000;
 }
 
-/* 15s Anti-Ad Countdown Screen */
-.anti-ad-screen {
+/* Floating Top Bar */
+.player-top-bar {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    z-index: 10;
+    padding: 24px 32px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 60%, transparent 100%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 20;
+    opacity: 1;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+}
+
+.player-top-bar.hide,
+.player-controls-overlay.hide {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.player-top-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 8px 18px;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    transition: all 0.2s ease;
+}
+
+.player-top-back-btn:hover,
+.player-top-back-btn:focus {
+    background: var(--primary-red);
+    border-color: var(--primary-red);
+    transform: scale(1.05);
+    box-shadow: 0 0 16px var(--primary-red-glow);
+}
+
+.player-back-arrow {
+    font-size: 1.2rem;
+}
+
+.player-top-info {
+    flex: 1;
+    margin: 0 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     text-align: center;
 }
 
-.anti-ad-circle {
-    width: 100px;
-    height: 100px;
+.player-video-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60vw;
+}
+
+.player-video-sub {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+
+.player-top-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.player-quality-badge {
+    background: rgba(229, 9, 20, 0.25);
+    border: 1px solid rgba(229, 9, 20, 0.7);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 0 10px rgba(229, 9, 20, 0.4);
+}
+
+.player-top-ext-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 6px 14px;
     border-radius: var(--radius-full);
-    border: 4px solid rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.player-top-ext-btn:hover,
+.player-top-ext-btn:focus {
+    background: rgba(255, 255, 255, 0.25);
+    color: #fff;
+}
+
+/* Center Loader & Indicator */
+.player-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 15;
+    pointer-events: none;
+}
+
+.player-loader.active {
+    display: flex;
+}
+
+.player-spinner {
+    width: 64px;
+    height: 64px;
+    border: 5px solid rgba(255, 255, 255, 0.15);
     border-top-color: var(--primary-red);
+    border-radius: var(--radius-full);
+    animation: spinSlow 0.9s linear infinite;
+    box-shadow: 0 0 25px var(--primary-red-glow);
+}
+
+.player-loader-text {
+    color: #ffffff;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-top: 16px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+}
+
+/* Center Play/Pause Ripple Action Indicator */
+.player-center-action {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.7);
+    width: 90px;
+    height: 90px;
+    border-radius: var(--radius-full);
+    background: rgba(0, 0, 0, 0.65);
+    border: 2px solid rgba(255, 255, 255, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2.2rem;
-    font-weight: 900;
-    color: #fff;
-    margin-bottom: 20px;
-    box-shadow: 0 0 25px var(--primary-red-glow);
-    animation: spinSlow 15s linear forwards;
+    z-index: 14;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.anti-ad-title {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: #fff;
-    margin-bottom: 8px;
+.player-center-action.animate {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
 }
 
-.anti-ad-sub {
-    font-size: 1rem;
-    color: var(--text-muted);
+.player-center-icon {
+    font-size: 2.5rem;
+    color: #ffffff;
+    margin-left: 4px;
 }
 
-@keyframes spinSlow {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Player Controls Overlay */
+/* Bottom Controls Overlay */
 .player-controls-overlay {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 30px 50px;
-    background: linear-gradient(0deg, rgba(0,0,0,0.95) 0%, transparent 100%);
+    padding: 30px 40px 24px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 60%, transparent 100%);
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 5;
-}
-
-.player-controls-overlay.show {
+    gap: 12px;
     opacity: 1;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 20;
+    pointer-events: auto;
 }
 
-.player-progress-bar {
+/* Progress / Seek Bar */
+.player-progress-container {
     width: 100%;
-    height: 8px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: var(--radius-full);
-    position: relative;
+    padding: 8px 0;
     cursor: pointer;
 }
 
+.player-progress-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-full);
+    position: relative;
+    transition: height 0.15s ease;
+}
+
+.player-progress-container:hover .player-progress-track {
+    height: 9px;
+}
+
+.player-progress-buffered {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: var(--radius-full);
+    width: 0%;
+}
+
 .player-progress-fill {
+    position: absolute;
+    top: 0;
+    right: 0;
     height: 100%;
     background: var(--primary-red);
     border-radius: var(--radius-full);
@@ -1386,33 +1548,87 @@ body[data-view^="movies"] .filter-bar-container {
     width: 0%;
 }
 
+.player-progress-handle {
+    position: absolute;
+    top: 50%;
+    transform: translate(50%, -50%) scale(0);
+    width: 16px;
+    height: 16px;
+    background: #ffffff;
+    border: 2px solid var(--primary-red);
+    border-radius: var(--radius-full);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+    transition: transform 0.15s ease;
+}
+
+.player-progress-container:hover .player-progress-handle {
+    transform: translate(50%, -50%) scale(1);
+}
+
+/* Buttons Row */
 .player-buttons-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.player-controls-left, .player-controls-right {
+.player-controls-left,
+.player-controls-right {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
 }
 
 .player-ctrl-btn {
-    background: transparent;
-    border: 2px solid transparent;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     color: #ffffff;
-    font-size: 1.3rem;
-    padding: 8px 16px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 8px 14px;
     border-radius: var(--radius-md);
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
 }
 
+.player-ctrl-btn:hover,
 .player-ctrl-btn:focus,
 .player-ctrl-btn.tv-focused {
-    background: rgba(229, 9, 20, 0.3);
+    background: var(--primary-red);
     border-color: var(--primary-red);
-    box-shadow: var(--shadow-focus);
+    box-shadow: 0 0 14px var(--primary-red-glow);
+    transform: scale(1.08);
+}
+
+.player-time-display {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-right: 8px;
+    font-variant-numeric: tabular-nums;
+}
+
+.player-time-sep {
+    color: #64748b;
+}
+
+.player-volume-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.player-volume-slider {
+    width: 75px;
+    height: 4px;
+    accent-color: var(--primary-red);
+    cursor: pointer;
 }
 
 /* Double-Back Toast Notification */
@@ -1523,15 +1739,19 @@ body[data-view^="movies"] .filter-bar-container {
     width: 100vw;
     height: 100vh;
     background: #090a0f;
-    z-index: 99980;
+    z-index: 100000 !important;
     display: none;
     overflow-y: auto;
     overflow-x: hidden;
     padding: 0 0 60px 0;
 }
 
-#details-modal.active {
-    display: block;
+#details-modal.active,
+#details-modal.oscar-details-modal.active {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
 }
 
 /* Ambient Backdrop Banner with Smooth Fade */
@@ -1963,14 +2183,14 @@ body[data-view^="movies"] .filter-bar-container {
     background: rgba(0, 0, 0, 0.75);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
-    z-index: 99995;
+    z-index: 100010 !important;
     display: none;
     align-items: flex-end;
     justify-content: center;
 }
 
 .bottom-sheet-overlay.active {
-    display: flex;
+    display: flex !important;
     animation: fadeIn 0.2s ease-out;
 }
 
@@ -2754,4 +2974,1013 @@ body[data-view^="movies"] .filter-bar-container {
     border-radius: 4px;
     font-size: 0.8rem;
     font-weight: 800;
+}
+
+/* ==============================================================================
+   OSCAR TV PRO STYLING: TRENDING RANKS, EPISODES & PROMO BANNERS
+   ============================================================================== */
+
+/* 1. Header with 'عرض الكل' on left */
+.section-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    padding: 0 4px;
+}
+
+.section-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-red-bar {
+    width: 4px;
+    height: 22px;
+    background: #e50914;
+    border-radius: 2px;
+    display: inline-block;
+}
+
+.section-main-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.2px;
+}
+
+.section-view-all {
+    color: #ef4444;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.section-view-all:hover,
+.section-view-all:focus {
+    color: #ffffff;
+    background: rgba(229, 9, 20, 0.25);
+    text-shadow: 0 0 8px rgba(229, 9, 20, 0.6);
+}
+
+/* 2. Numbered Badges for 'رائج اليوم' (1, 2, 3, 4...) */
+.trending-poster-wrap {
+    position: relative;
+    overflow: hidden;
+}
+
+.trending-rank-num {
+    position: absolute;
+    bottom: -15px;
+    right: 2px;
+    font-size: 5rem;
+    font-weight: 900;
+    line-height: 1;
+    color: #ffffff;
+    -webkit-text-stroke: 2px #000;
+    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.95);
+    z-index: 5;
+    pointer-events: none;
+    font-family: 'Outfit', 'Inter', sans-serif;
+}
+
+/* 3. Poster Badges (+16, WEB-DL, مترجم, rating) */
+.card-badges-top {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 4;
+    pointer-events: none;
+}
+
+.badge-age {
+    background: #ea580c;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.badge-trans {
+    background: #0284c7;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.badge-res {
+    background: #dc2626;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* 4. Episode Landscape Cards (16:9 with Play Button & Duration) */
+.episode-h-card {
+    flex: 0 0 clamp(200px, 26vw, 290px);
+    aspect-ratio: 16 / 9.5;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #141720;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.episode-h-card:hover,
+.episode-h-card:focus,
+.episode-h-card.tv-focused {
+    transform: scale(1.04);
+    border-color: #ef4444;
+    box-shadow: 0 8px 24px rgba(239, 68, 68, 0.4);
+    outline: none;
+}
+
+.episode-h-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.75);
+    transition: filter 0.2s;
+}
+
+.episode-h-card:hover .episode-h-img {
+    filter: brightness(0.9);
+}
+
+.episode-play-icon {
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 38px;
+    height: 38px;
+    background: rgba(0, 0, 0, 0.65);
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.episode-h-card:hover .episode-play-icon,
+.episode-h-card:focus .episode-play-icon {
+    background: #e50914;
+    border-color: #e50914;
+    transform: translate(-50%, -50%) scale(1.15);
+}
+
+.episode-duration-pill {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    backdrop-filter: blur(4px);
+}
+
+.episode-bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 8px 10px;
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.95) 100%);
+}
+
+.episode-series-name {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.episode-num-label {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+
+/* 5. Interactive Category Promo Banners with Character Badges & 3s Auto-Rotation */
+.category-promo-banner {
+    width: 100%;
+    min-height: 115px;
+    margin: 30px 0 18px 0;
+    border-radius: 18px;
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.category-promo-banner:hover,
+.category-promo-banner:focus,
+.category-promo-banner.tv-focused {
+    transform: translateY(-3px) scale(1.008);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+    outline: none;
+}
+
+/* Category Specific Themes & Glows */
+.category-promo-banner.banner-anime {
+    background: linear-gradient(90deg, #1b0d2d 0%, #351356 50%, #12071d 100%);
+    border-color: rgba(168, 85, 247, 0.35);
+}
+.category-promo-banner.banner-anime:hover,
+.category-promo-banner.banner-anime.tv-focused {
+    border-color: #a855f7;
+    box-shadow: 0 0 25px rgba(168, 85, 247, 0.45);
+}
+
+.category-promo-banner.banner-arabic {
+    background: linear-gradient(90deg, #2c0e12 0%, #52161d 50%, #170709 100%);
+    border-color: rgba(239, 68, 68, 0.35);
+}
+.category-promo-banner.banner-arabic:hover,
+.category-promo-banner.banner-arabic.tv-focused {
+    border-color: #ef4444;
+    box-shadow: 0 0 25px rgba(239, 68, 68, 0.45);
+}
+
+.category-promo-banner.banner-foreign {
+    background: linear-gradient(90deg, #0a1728 0%, #173254 50%, #080f1b 100%);
+    border-color: rgba(59, 130, 246, 0.35);
+}
+.category-promo-banner.banner-foreign:hover,
+.category-promo-banner.banner-foreign.tv-focused {
+    border-color: #3b82f6;
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.45);
+}
+
+.category-promo-banner.banner-turkish {
+    background: linear-gradient(90deg, #2a0b1e 0%, #4f1438 50%, #180611 100%);
+    border-color: rgba(236, 72, 153, 0.35);
+}
+.category-promo-banner.banner-turkish:hover,
+.category-promo-banner.banner-turkish.tv-focused {
+    border-color: #ec4899;
+    box-shadow: 0 0 25px rgba(236, 72, 153, 0.45);
+}
+
+.category-promo-banner.banner-wwe {
+    background: linear-gradient(90deg, #261c08 0%, #4a370e 50%, #171005 100%);
+    border-color: rgba(234, 179, 8, 0.35);
+}
+.category-promo-banner.banner-wwe:hover,
+.category-promo-banner.banner-wwe.tv-focused {
+    border-color: #eab308;
+    box-shadow: 0 0 25px rgba(234, 179, 8, 0.45);
+}
+
+.category-promo-banner.banner-indian {
+    background: linear-gradient(90deg, #271408 0%, #4e290f 50%, #180b04 100%);
+    border-color: rgba(245, 158, 11, 0.35);
+}
+.category-promo-banner.banner-indian:hover,
+.category-promo-banner.banner-indian.tv-focused {
+    border-color: #f59e0b;
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.45);
+}
+
+/* Dynamic Rotating Backdrop Image inside Banner */
+.banner-bg-slider {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.banner-bg-slide {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center 30%;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out, transform 4s ease-out;
+    transform: scale(1);
+}
+
+.banner-bg-slide.active {
+    opacity: 0.28;
+    transform: scale(1.05);
+}
+
+.banner-bg-gradient-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(90deg, rgba(10, 10, 15, 0.95) 0%, rgba(10, 10, 15, 0.7) 50%, rgba(10, 10, 15, 0.95) 100%);
+    pointer-events: none;
+}
+
+/* Banner Content Wrapper */
+.banner-content-layout {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.banner-left-wrap {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+/* Character / Cast Avatar Badge */
+.banner-logo-badge {
+    width: 68px;
+    height: 68px;
+    min-width: 68px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    background: #0f172a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.banner-logo-badge img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.category-promo-banner:hover .banner-logo-badge img,
+.category-promo-banner.tv-focused .banner-logo-badge img {
+    transform: scale(1.12);
+}
+
+.banner-text-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.banner-tag-title {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -0.3px;
+}
+
+.banner-tag-sub {
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.banner-highlight-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.14);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Banner Right Action Button & Slide Indicators */
+.banner-right-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    z-index: 3;
+}
+
+.banner-btn-action {
+    padding: 10px 24px;
+    background: #8b5cf6;
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.95rem;
+    border-radius: 30px;
+    border: none;
+    box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.banner-btn-action:hover,
+.banner-btn-action:focus {
+    transform: scale(1.05);
+    filter: brightness(1.15);
+}
+
+.banner-btn-action.btn-red {
+    background: #e50914;
+    box-shadow: 0 4px 14px rgba(229, 9, 20, 0.45);
+}
+
+.banner-btn-action.btn-blue {
+    background: #2563eb;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.45);
+}
+
+.banner-btn-action.btn-pink {
+    background: #db2777;
+    box-shadow: 0 4px 14px rgba(219, 39, 119, 0.45);
+}
+
+.banner-btn-action.btn-gold {
+    background: #ca8a04;
+    box-shadow: 0 4px 14px rgba(202, 138, 4, 0.45);
+}
+
+.banner-btn-action.btn-orange {
+    background: #d97706;
+    box-shadow: 0 4px 14px rgba(217, 119, 6, 0.45);
+}
+
+/* 3-second auto-slide pagination dots */
+.banner-dots-track {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.banner-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    transition: all 0.3s ease;
+}
+
+.banner-dot.active {
+    width: 18px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+
+/* Live TV Banner Specific Theme */
+.category-promo-banner.banner-livetv {
+    background: linear-gradient(90deg, #1c080b 0%, #3e0e15 50%, #150608 100%);
+    border-color: rgba(220, 38, 38, 0.4);
+}
+.category-promo-banner.banner-livetv:hover,
+.category-promo-banner.banner-livetv.tv-focused {
+    border-color: #ef4444;
+    box-shadow: 0 0 30px rgba(239, 68, 68, 0.55);
+}
+
+/* Home Channels Carousel Card */
+.channel-home-card {
+    min-width: 170px;
+    max-width: 170px;
+    height: 140px;
+    background: linear-gradient(145deg, rgba(30, 20, 25, 0.85) 0%, rgba(15, 10, 15, 0.95) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+    flex-shrink: 0;
+}
+.channel-home-card:hover,
+.channel-home-card:focus,
+.channel-home-card.tv-focused {
+    transform: translateY(-5px) scale(1.04);
+    border-color: #ef4444;
+    box-shadow: 0 10px 24px rgba(239, 68, 68, 0.35);
+    background: linear-gradient(145deg, rgba(45, 15, 20, 0.95) 0%, rgba(20, 10, 15, 0.98) 100%);
+}
+.channel-card-badge-live {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.7);
+    animation: livePulse 1.8s infinite;
+}
+@keyframes livePulse {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.65; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1); }
+}
+.channel-logo-wrap {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 10px;
+    padding: 6px;
+    margin-top: 10px;
+}
+.channel-home-logo {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+.channel-home-info {
+    text-align: center;
+    width: 100%;
+    overflow: hidden;
+}
+.channel-home-name {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.channel-home-category {
+    display: block;
+    font-size: 0.68rem;
+    color: var(--text-muted, #94a3b8);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ==========================================================================
+   OSCAR TV: TELEGRAM BANNER STRIP
+   ========================================================================== */
+.oscar-telegram-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    background: linear-gradient(135deg, rgba(16, 42, 77, 0.85) 0%, rgba(10, 25, 47, 0.95) 100%);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 12px;
+    padding: 10px 18px;
+    margin: 12px 24px 18px 24px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+.oscar-telegram-strip:hover,
+.oscar-telegram-strip:focus,
+.oscar-telegram-strip.tv-focused {
+    border-color: #38bdf8;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+    transform: translateY(-2px);
+}
+.telegram-icon-box {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    background: #0284c7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(2, 132, 199, 0.6);
+}
+.telegram-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+}
+.telegram-tag {
+    background: rgba(56, 189, 248, 0.18);
+    color: #38bdf8;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+.telegram-text {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.telegram-join-btn {
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    border: none;
+    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.5);
+}
+.telegram-join-btn:hover,
+.telegram-join-btn:focus,
+.telegram-join-btn.tv-focused {
+    background: #0ea5e9;
+    transform: scale(1.05);
+    box-shadow: 0 0 14px rgba(14, 165, 233, 0.8);
+}
+
+/* ==========================================================================
+   OSCAR TV: LIVE MATCHES STRIP
+   ========================================================================== */
+.oscar-matches-section {
+    padding: 0 24px 20px 24px;
+}
+.matches-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+.matches-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.matches-live-pulse {
+    width: 10px;
+    height: 10px;
+    background: #ef4444;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #ef4444;
+    animation: livePulse 1.5s infinite;
+}
+.matches-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+.matches-sub {
+    font-size: 0.8rem;
+    color: #94a3b8;
+}
+.matches-scroll-track {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding: 6px 4px 12px 4px;
+    scrollbar-width: thin;
+}
+.matches-scroll-track::-webkit-scrollbar {
+    height: 6px;
+}
+.matches-scroll-track::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+}
+.match-card {
+    flex: 0 0 260px;
+    background: linear-gradient(145deg, #151922 0%, #0d1117 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.match-card:hover,
+.match-card:focus,
+.match-card.tv-focused {
+    border-color: var(--primary-red);
+    box-shadow: 0 0 18px var(--primary-red-glow);
+    transform: translateY(-4px);
+}
+.match-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.match-tourney-pill {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #94a3b8;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+.match-status-badge {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #ef4444;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.match-status-badge.live::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: #ef4444;
+    border-radius: 50%;
+    box-shadow: 0 0 6px #ef4444;
+    animation: livePulse 1.2s infinite;
+}
+.match-teams-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 6px 0;
+}
+.match-team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    text-align: center;
+}
+.match-team-logo {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    margin-bottom: 4px;
+}
+.match-team-name {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #ffffff;
+    max-width: 85px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.match-score-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 8px;
+}
+.match-score-text {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 2px;
+    font-variant-numeric: tabular-nums;
+}
+.match-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.7rem;
+    color: #64748b;
+}
+.match-channel-pill {
+    color: #38bdf8;
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   OSCAR TV: 3D GIANT RANKED NUMERALS (رائج اليوم 1, 2, 3, 4...)
+   ========================================================================== */
+.trending-poster-wrap {
+    position: relative;
+    overflow: visible !important;
+}
+.trending-rank-num {
+    position: absolute;
+    left: -12px;
+    bottom: -15px;
+    font-size: 5.5rem;
+    font-weight: 900;
+    line-height: 1;
+    font-family: 'Impact', 'Outfit', sans-serif;
+    color: #ffffff;
+    z-index: 8;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -2px;
+    -webkit-text-stroke: 2px rgba(0, 0, 0, 0.85);
+    text-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.95),
+        0 6px 12px rgba(0, 0, 0, 0.8),
+        0 0 20px rgba(229, 9, 20, 0.6);
+    filter: drop-shadow(4px 6px 8px rgba(0, 0, 0, 0.9));
+    transition: transform 0.25s ease;
+}
+.media-card:hover .trending-rank-num,
+.media-card:focus .trending-rank-num,
+.media-card.tv-focused .trending-rank-num {
+    transform: scale(1.1) translateY(-6px);
+    color: #ffffff;
+    text-shadow: 
+        0 2px 6px rgba(0, 0, 0, 0.95),
+        0 8px 16px rgba(0, 0, 0, 0.9),
+        0 0 25px rgba(229, 9, 20, 0.9);
+}
+
+/* ==========================================================================
+   OSCAR TV: WATCH SERVERS SHEET & QUALITY CARDS
+   ========================================================================== */
+.oscar-server-group {
+    margin-bottom: 16px;
+}
+.oscar-quality-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.oscar-quality-badge-gold {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: #000;
+    font-size: 0.78rem;
+    font-weight: 900;
+    padding: 3px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}
+.oscar-quality-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #e2e8f0;
+}
+.oscar-server-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(145deg, #881320 0%, #500713 100%);
+    border: 1px solid rgba(229, 9, 20, 0.5);
+    border-radius: 12px;
+    padding: 12px 18px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.22s ease;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    text-align: right;
+}
+.oscar-server-btn:hover,
+.oscar-server-btn:focus,
+.oscar-server-btn.tv-focused {
+    background: linear-gradient(145deg, #b91c1c 0%, #7f1d1d 100%);
+    border-color: #ef4444;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+    transform: scale(1.02);
+}
+.oscar-srv-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.oscar-srv-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+.oscar-srv-sub {
+    font-size: 0.78rem;
+    color: #fca5a5;
+    font-weight: 600;
+}
+.oscar-srv-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: #ffffff;
+    transition: all 0.2s ease;
+}
+.oscar-server-btn:hover .oscar-srv-icon,
+.oscar-server-btn:focus .oscar-srv-icon,
+.oscar-server-btn.tv-focused .oscar-srv-icon {
+    background: #ffffff;
+    color: #b91c1c;
+    transform: scale(1.1);
+}
+
+/* ==========================================================================
+   OSCAR TV: BOTTOM NAVIGATION BAR (Mobile & MEmu)
+   ========================================================================== */
+.oscar-bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: rgba(13, 17, 23, 0.96);
+    backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 1000;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 8px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
+}
+@media (max-width: 900px) {
+    .oscar-bottom-nav {
+        display: flex;
+    }
+    .main-wrapper {
+        padding-bottom: 74px;
+    }
+}
+.oscar-bnav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #94a3b8;
+    padding: 6px 10px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    gap: 3px;
+    flex: 1;
+}
+.oscar-bnav-icon {
+    font-size: 1.25rem;
+    transition: transform 0.2s ease;
+}
+.oscar-bnav-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+}
+.oscar-bnav-item.active,
+.oscar-bnav-item:hover,
+.oscar-bnav-item:focus,
+.oscar-bnav-item.tv-focused {
+    color: #ffffff;
+}
+.oscar-bnav-item.active .oscar-bnav-icon,
+.oscar-bnav-item:hover .oscar-bnav-icon {
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.7));
+}
+.oscar-bnav-item.active .oscar-bnav-label {
+    color: var(--primary-red);
 }

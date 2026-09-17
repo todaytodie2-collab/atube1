@@ -1,0 +1,14 @@
+[
+  {
+    "name": "سيرفر VIP 4K (Byse)",
+    "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    "quality": "4K UHD",
+    "badge": "Byse"
+  },
+  {
+    "name": "سيرفر StreamHG FHD",
+    "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    "quality": "1080p FHD",
+    "badge": "StreamHG"
+  }
+]

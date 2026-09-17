@@ -1,0 +1,28 @@
+{
+  "id": "mov_the_batman",
+  "title": "The Batman",
+  "arabic_title": "باتمان: فارس الظلام",
+  "original_title": "The Batman",
+  "year": "2022",
+  "rating": "8.3",
+  "duration": "176 دقيقة",
+  "quality": "4K HDR",
+  "category": "foreign_movies",
+  "content_type": "movie",
+  "sub_category": "subbed",
+  "poster": "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg",
+  "backdrop": "https://image.tmdb.org/t/p/original/b0PlSFdDwbyK0cf5RxwDpaOJQvQ.jpg",
+  "country": "أمريكا",
+  "language": "مترجم",
+  "director": "Matt Reeves",
+  "writer": "",
+  "genres": [
+    "جريمة",
+    "دراما",
+    "غموض",
+    "أكشن"
+  ],
+  "synopsis": "يتتبع باتمان قاتلاً متسلسلاً سادياً يترك وراءه أدلة غامضة في عالم مدينة جوثام السفلي.",
+  "total_seasons": 0,
+  "updated_at": 1789669721
+}

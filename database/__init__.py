@@ -39,6 +39,10 @@ class VODDatabaseManager:
         return VODRepository.get_episodes(media_id, season_number)
 
     @classmethod
+    def get_recent_episodes(cls, category: str = "all", limit: int = 16) -> List[Dict[str, Any]]:
+        return VODRepository.get_recent_episodes(category, limit)
+
+    @classmethod
     def save_media(cls, media_data: Dict[str, Any]):
         return VODRepository.save_media(media_data)
 

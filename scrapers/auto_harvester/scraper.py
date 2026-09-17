@@ -12,6 +12,18 @@ Features:
 - Zero-Duplication Guard.
 """
 
+import sys
+if sys.stdout and hasattr(sys.stdout, 'reconfigure'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    except Exception:
+        pass
+if sys.stderr and hasattr(sys.stderr, 'reconfigure'):
+    try:
+        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    except Exception:
+        pass
+
 import asyncio
 import json
 import re
@@ -218,17 +230,98 @@ def parse_series_title_and_episode(raw_title: str) -> Tuple[str, int, int]:
 
     return clean_title, season_num, episode_num
 
-def get_chrome_executable_path() -> Optional[str]:
-    """Finds Google Chrome installation path on Windows workstations."""
+def get_browser_executable_path() -> Optional[str]:
+    """Finds Brave, Google Chrome, or Edge installation path on Windows workstations."""
     candidates = [
+        r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe",
+        r"C:\Program Files (x86)\BraveSoftware\Brave-Browser\Application\brave.exe",
+        os.path.expandvars(r"%LOCALAPPDATA%\BraveSoftware\Brave-Browser\Application\brave.exe"),
         r"C:\Program Files\Google\Chrome\Application\chrome.exe",
         r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
-        os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe")
+        os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe"),
+        r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+        r"C:\Program Files\Microsoft\Edge\Application\msedge.exe"
     ]
     for c in candidates:
         if os.path.exists(c):
             return c
     return None
+
+def launch_browser_with_cdp(target_url: str = "") -> bool:
+    """Launches Brave/Chrome with remote debugging enabled on port 9222 for manual human captcha bypass."""
+    exe_path = get_browser_executable_path()
+    if not exe_path:
+        print("[!] لم يتم العثور على متصفح Brave أو Chrome في النظام.")
+        return False
+    
+    user_data_dir = os.path.join(PROJECT_ROOT, "atube_browser_profile")
+    os.makedirs(user_data_dir, exist_ok=True)
+    
+    cmd = [
+        exe_path,
+        "--remote-debugging-port=9222",
+        f"--user-data-dir={user_data_dir}",
+        "--no-first-run",
+        "--no-default-browser-check"
+    ]
+    if target_url:
+        cmd.append(target_url)
+
+    try:
+        import subprocess
+        subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        time.sleep(2)
+        print(f"[🌐 المتصفح المرئي] تم فتح {os.path.basename(exe_path)} على المنفذ 9222 للتفاعل بالماوس وحل الكابتشا.")
+        return True
+    except Exception as e:
+        print(f"[!] خطأ أثناء تشغيل المتصفح: {e}")
+        return False
+
+async def is_cloudflare_challenge(page) -> bool:
+    """Detects if page is currently blocked by Cloudflare verification / Turnstile."""
+    try:
+        title = (await page.title()).lower()
+        if any(t in title for t in ["just a moment", "security verification", "attention required", "cloudflare"]):
+            return True
+        content = await page.content()
+        if any(kw in content for kw in ["cf-turnstile", "challenges.cloudflare.com", "Performing security verification", "Verify you are human", "Ray ID:"]):
+            return True
+    except Exception:
+        pass
+    return False
+
+async def handle_cloudflare_challenge(page, current_url: str, timeout_sec: int = 90) -> bool:
+    """
+    If Cloudflare challenge is encountered:
+    Alerts the user and waits for them to click 'Verify you are human' in Brave/Chrome.
+    """
+    if not await is_cloudflare_challenge(page):
+        return True
+
+    print("\n" + "=" * 68)
+    print(" ⚠️  [تنبيه حماية Cloudflare / التحقق الأمني]")
+    print(f" 🔗 الرابط المحمي: {current_url}")
+    print(" 🖱️  يرجى النقر بالماوس على مربع 'Verify you are human' في المتصفح المفتوح الآن...")
+    print(f" ⏳ السكربت ينتظرك لتخطي الحماية (المهلة: {timeout_sec} ثانية)...")
+    print("=" * 68 + "\n")
+
+    # If the browser is not visible, attempt to launch visible browser
+    if "--remote-debugging-port" not in str(page.context):
+        launch_browser_with_cdp(current_url)
+
+    start_t = time.time()
+    while time.time() - start_t < timeout_sec:
+        await asyncio.sleep(2.0)
+        try:
+            if not await is_cloudflare_challenge(page):
+                print("\n [✓ تم تخطي الحماية بنجاح بواسطة المستخدم!] استئناف الكشط وسحب المحتوى...")
+                await asyncio.sleep(1.5)
+                return True
+        except Exception:
+            pass
+
+    print(" ⏱️ [انتهت المهلة] لم يتم النقر على التحقق، المتابعة للمادة التالية...")
+    return False
 
 async def scrape_target_route(context, provider: str, category_key: str, base_url: str, selectors: Dict[str, str], max_pages: int = 2):
     """Crawls a specific category from a provider and ingests into SQLite with complete subcategory isolation."""
@@ -262,7 +355,10 @@ async def scrape_target_route(context, provider: str, category_key: str, base_ur
         
         try:
             response = await page.goto(paginated_url, wait_until="commit", timeout=45000)
-            await page.wait_for_timeout(3500)
+            await page.wait_for_timeout(2500)
+            
+            # Check Cloudflare challenge
+            await handle_cloudflare_challenge(page, paginated_url)
             
             if response and (response.status == 404 or "الصفحة غير موجودة" in await page.content()):
                 print(f"[✓] تم الوصول لنهاية القسم تلقائياً عند الصفحة {current_page-1}.")
@@ -305,31 +401,74 @@ async def scrape_target_route(context, provider: str, category_key: str, base_ur
                 await handle_popups(movie_page)
                 try:
                     await movie_page.goto(full_link, wait_until="domcontentloaded", timeout=30000)
-                    await movie_page.wait_for_timeout(3500)
+                    await movie_page.wait_for_timeout(2500)
                     
-                    # Extract direct iframes
+                    # Check Cloudflare on item page
+                    await handle_cloudflare_challenge(movie_page, full_link)
+                    
+                    # Comprehensive Multi-Server Extraction (Matching EgyDead, FaselHD, TopCinema, QessetEshq, ArabSeed)
+                    parsed_servers: List[Dict[str, Any]] = []
+                    seen_server_urls = set()
+
+                    # 1. Extract direct iframes
                     iframes = await movie_page.query_selector_all("iframe")
-                    embed_urls = []
                     for iframe in iframes:
                         src = await iframe.get_attribute("src")
-                        if src and any(x in src.lower() for x in ["embed", "player", "stream", "video", "dood", "vidoza", "fembed"]):
-                            embed_urls.append(src)
-                            
-                    # Extract alternative server lists and data-url attributes
-                    server_elements = await movie_page.query_selector_all("ul.servers-list li, [data-url], .watch-servers a, .servers a, div.servers-list a")
+                        if src and any(x in src.lower() for x in ["embed", "player", "stream", "video", "dood", "vidoza", "fembed", "megamax", "streamhg", "byse", "voe", "mixdrop", "videotube"]):
+                            if src not in seen_server_urls:
+                                seen_server_urls.add(src)
+                                parsed_servers.append({
+                                    "name": "سيرفر المشاهدة السحابي 1080P",
+                                    "url": src,
+                                    "quality": "1080p FHD",
+                                    "badge": "VIP ⚡"
+                                })
+
+                    # 2. Extract FaselHD & TopCinema onclick handlers (e.g. onclick="player_iframe.location.href='...'")
+                    onclick_elements = await movie_page.query_selector_all("ul.tabs-ul li, [onclick*='location'], .watch-servers a, .servers a, div.server-item, .server-list span")
+                    for el in onclick_elements:
+                        onclick_val = await el.get_attribute("onclick") or ""
+                        s_name = (await el.inner_text()).strip() if hasattr(el, "inner_text") else "سيرفر مشاهدة"
+                        s_name = re.sub(r'\s+', ' ', s_name)
+                        
+                        # Extract URL from onclick
+                        m_url = re.search(r"['\"](https?://[^'\"]+)['\"]", onclick_val)
+                        if m_url:
+                            extracted_url = m_url.group(1)
+                            if extracted_url not in seen_server_urls:
+                                seen_server_urls.add(extracted_url)
+                                parsed_servers.append({
+                                    "name": s_name or "سيرفر مباشر",
+                                    "url": extracted_url,
+                                    "quality": "1080p FHD",
+                                    "badge": "1080P"
+                                })
+
+                    # 3. Extract alternative server lists and data-url / href attributes (EgyDead, Qesen, ArabSeed, etc.)
+                    server_elements = await movie_page.query_selector_all("ul.servers-list li, [data-url], .watch-servers a, .servers a, div.servers-list a, div.server-item, .servers-tabs span, div.servers button")
                     for s_el in server_elements:
-                        s_url = await s_el.get_attribute("data-url") or await s_el.get_attribute("href")
-                        if s_url and s_url.startswith("http") and any(x in s_url.lower() for x in ["embed", "player", "stream", "video", "dood"]):
-                            if s_url not in embed_urls:
-                                embed_urls.append(s_url)
-                    
+                        s_url = await s_el.get_attribute("data-url") or await s_el.get_attribute("href") or await s_el.get_attribute("data-src")
+                        s_name = (await s_el.inner_text()).strip() if hasattr(s_el, "inner_text") else "سيرفر سحابي"
+                        s_name = re.sub(r'\s+', ' ', s_name)
+                        
+                        if s_url and s_url.startswith("http") and not any(skip in s_url for skip in ["facebook.com", "twitter.com", "telegram.org", "whatsapp.com"]):
+                            if any(x in s_url.lower() for x in ["embed", "player", "stream", "video", "dood", "voe", "mixdrop", "megamax", "streamhg", "videotube", "streamwish", "filelions", "streamtape", "lulustream", "ok.ru"]):
+                                if s_url not in seen_server_urls:
+                                    seen_server_urls.add(s_url)
+                                    parsed_servers.append({
+                                        "name": s_name or "سيرفر مشاهدة",
+                                        "url": s_url,
+                                        "quality": "1080p FHD",
+                                        "badge": "VIP ⚡"
+                                    })
+
                     # Extract story/synopsis if present on page
                     page_story = ""
                     story_el = await movie_page.query_selector("div.story, div.post-story, .entry-content, p.story")
                     if story_el:
                         page_story = await story_el.inner_text()
 
-                    servers_to_save = embed_urls if embed_urls else [full_link]
+                    servers_to_save = parsed_servers if parsed_servers else [{"name": "سيرفر مباشر", "url": full_link, "quality": "1080p FHD", "badge": "1080P"}]
 
                     # Distinguish Series Episodes vs Standalone Movies
                     is_episodic = content_type == "series" or any(kw in title_clean for kw in ["الحلقة", "حلقة", "الموسم", "موسم", "E", "S"])
@@ -410,14 +549,14 @@ async def run_auto_harvester_job(target_provider: Optional[str] = None, target_c
         # 2. Smart Fallback: Launch isolated Persistent Context with realistic Chrome profile
         if not context:
             print("[!] لم يتم العثور على متصفح مفتوح (Port 9222). إطلاق Fallback المتصفح المستقل والمستمر...")
-            user_data_dir = os.path.join(PROJECT_ROOT, "chrome_user_data")
+            user_data_dir = os.path.join(PROJECT_ROOT, "atube_browser_profile")
             os.makedirs(user_data_dir, exist_ok=True)
             
-            chrome_exe = get_chrome_executable_path()
+            browser_exe = get_browser_executable_path()
             try:
                 context = await p.chromium.launch_persistent_context(
                     user_data_dir,
-                    executable_path=chrome_exe,
+                    executable_path=browser_exe,
                     headless=True,
                     args=[
                         "--disable-blink-features=AutomationControlled",

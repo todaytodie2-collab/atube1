@@ -1,0 +1,27 @@
+{
+  "id": "mov_oppenheimer",
+  "title": "Oppenheimer",
+  "arabic_title": "أوبنهايمر",
+  "original_title": "Oppenheimer",
+  "year": "2023",
+  "rating": "8.9",
+  "duration": "180 دقيقة",
+  "quality": "4K IMAX",
+  "category": "foreign_movies",
+  "content_type": "movie",
+  "sub_category": "subbed",
+  "poster": "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg",
+  "backdrop": "https://image.tmdb.org/t/p/original/rIb9dQsn98v8ti51Q595L3u7f6L.jpg",
+  "country": "أمريكا",
+  "language": "مترجم",
+  "director": "Christopher Nolan",
+  "writer": "",
+  "genres": [
+    "دراما",
+    "تاريخي",
+    "سيرة ذاتية"
+  ],
+  "synopsis": "قصة العالم الأمريكي جيه. روبرت أوبنهايمر ودوره المحوري في تطوير القنبلة الذرية وتداعياتها التاريخية.",
+  "total_seasons": 0,
+  "updated_at": 1789669721
+}

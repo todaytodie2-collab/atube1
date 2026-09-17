@@ -1,0 +1,28 @@
+{
+  "id": "mov_anime_your_name",
+  "title": "Your Name.",
+  "arabic_title": "اسمك",
+  "original_title": "Kimi no Na wa.",
+  "year": "2016",
+  "rating": "8.9",
+  "duration": "106 دقيقة",
+  "quality": "4K Ultra HD",
+  "category": "anime_movies",
+  "content_type": "movie",
+  "sub_category": "subbed",
+  "poster": "https://image.tmdb.org/t/p/w500/q719qXXEzOoYaps6qFsxWa9HqMw.jpg",
+  "backdrop": "https://image.tmdb.org/t/p/original/dIWwZWOPHowMNRgJDbHaDMqvgnd.jpg",
+  "country": "اليابان",
+  "language": "مترجم",
+  "director": "Makoto Shinkai",
+  "writer": "Makoto Shinkai",
+  "genres": [
+    "أنمي",
+    "رومانسي",
+    "دراما",
+    "فانتازيا"
+  ],
+  "synopsis": "يتبادل فتى في طوكيو وفتاة في قرية ريفية أجسادهما بطريقة سحرية غامضة، فيبدآن بالتواصل عبر ترك رسائل ومذكرات بينما يهدد نيزك مدمر بالاصطدام بالأرض.",
+  "total_seasons": 0,
+  "updated_at": 1789669721
+}
