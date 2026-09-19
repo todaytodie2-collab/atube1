@@ -132,6 +132,7 @@ body, html {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
+    display: none !important;
 }
 
 .splash-backdrop {
@@ -3571,7 +3572,9 @@ body[data-view="anime"] .filter-bar-container {
     border: 1px solid rgba(56, 189, 248, 0.25);
     border-radius: 12px;
     padding: 10px 18px;
-    margin: 12px 24px 18px 24px;
+    margin: 75px 24px 18px 24px;
+    position: relative;
+    z-index: 50;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     transition: all 0.25s ease;
     cursor: pointer;
@@ -3648,8 +3651,8 @@ body[data-view="anime"] .filter-bar-container {
 }
 .matches-header {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
     margin-bottom: 12px;
 }
 .matches-title-wrap {
@@ -3983,4 +3986,144 @@ body[data-view="anime"] .filter-bar-container {
 }
 .oscar-bnav-item.active .oscar-bnav-label {
     color: var(--primary-red);
+}
+
+/* ==========================================================================
+   MODERN LUXURY TV & WEB FOOTER
+   ========================================================================== */
+.app-footer {
+    margin-top: 80px;
+    padding: 60px 48px 40px 48px;
+    background: linear-gradient(180deg, rgba(14, 16, 23, 0.4) 0%, rgba(7, 8, 12, 0.98) 100%);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+    z-index: 10;
+}
+.footer-top-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.2fr;
+    gap: 40px;
+    margin-bottom: 48px;
+}
+.footer-logo {
+    font-family: var(--font-brand);
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+.footer-logo span {
+    color: var(--primary-red);
+}
+.footer-badge {
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 3px 8px;
+    background: rgba(229, 9, 20, 0.2);
+    border: 1px solid var(--primary-red);
+    border-radius: 6px;
+    color: var(--primary-red);
+    letter-spacing: 1px;
+}
+.footer-desc {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    max-width: 480px;
+}
+.footer-badges-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.footer-feat-tag {
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    color: #cbd5e1;
+}
+.footer-col-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 8px;
+}
+.footer-col-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 28px;
+    height: 3px;
+    background: var(--primary-red);
+    border-radius: 2px;
+}
+.footer-links-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.footer-link {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: inline-block;
+}
+.footer-link:hover,
+.footer-link:focus,
+.footer-link.tv-focused {
+    color: var(--primary-red);
+    transform: translateX(-4px);
+}
+.footer-link-text {
+    color: #64748b;
+    font-size: 0.84rem;
+}
+.footer-bottom-bar {
+    padding-top: 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+.footer-copyright {
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+.footer-copyright strong {
+    color: #ffffff;
+}
+.footer-disclaimer {
+    color: #64748b;
+    font-size: 0.78rem;
+    max-width: 600px;
+}
+
+@media (max-width: 1024px) {
+    .footer-top-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
+}
+@media (max-width: 640px) {
+    .footer-top-grid {
+        grid-template-columns: 1fr;
+    }
+    .app-footer {
+        padding: 40px 20px 80px 20px;
+    }
 }

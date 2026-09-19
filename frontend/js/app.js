@@ -115,9 +115,17 @@ const App = {
                 const atubeList = allItems.filter(i => (i.category && i.category.includes('atube')) || (i.quality && i.quality.includes('4K')));
                 this.atubeItems = atubeList.slice(0, 12);
 
-                // Pick real hero from catalog (Prefer items with high-res backdrop)
-                this.heroItem = allItems.find(i => i.backdrop && i.backdrop.startsWith('http') && i.backdrop !== i.poster)
-                    || allItems.find(i => i.poster && i.poster.startsWith('http'))
+                // Pick real hero from catalog (Prefer top authentic blockbuster movies)
+                let heroCandidate = null;
+                try {
+                    const arabMoviesFeed = await window.API.getFeed('movie', 'arabic_movies', 1, 6).catch(() => ({ items: [] }));
+                    if (arabMoviesFeed && arabMoviesFeed.items && arabMoviesFeed.items.length > 0) {
+                        heroCandidate = arabMoviesFeed.items.find(m => m.id === 'akwam_فيلم-عصابة-الماكس-2024' || m.id === 'akwam_فيلم-x-مراتي-2024') || arabMoviesFeed.items[0];
+                    }
+                } catch (e) {}
+
+                this.heroItem = heroCandidate
+                    || allItems.find(i => (i.category === 'arabic_movies' || i.category === 'foreign_movies') && i.poster)
                     || allItems[0] || null;
 
                 // Dynamic Splash Backdrop
@@ -185,12 +193,26 @@ const App = {
         const displayTitle = this.getDisplayTitle(hero);
         const displaySub = this.getDisplaySubtitle(hero);
 
+        let genreDisplay = '';
+        if (hero.genres) {
+            if (Array.isArray(hero.genres)) {
+                genreDisplay = hero.genres.join(' • ');
+            } else if (typeof hero.genres === 'string') {
+                try {
+                    const parsed = JSON.parse(hero.genres);
+                    genreDisplay = Array.isArray(parsed) ? parsed.join(' • ') : String(parsed);
+                } catch (e) {
+                    genreDisplay = hero.genres.replace(/,/g, ' • ');
+                }
+            }
+        }
+
         if (titleEl) titleEl.textContent = displayTitle;
-        if (subtitleEl) subtitleEl.textContent = displaySub || (hero.genres ? (Array.isArray(hero.genres) ? hero.genres.join(' • ') : JSON.parse(hero.genres || '[]').join(' • ')) : '');
-        if (ratingEl) ratingEl.textContent = `★ ${hero.rating || '8.7'}`;
-        if (durationEl) durationEl.textContent = hero.duration || '58 دقيقة';
+        if (subtitleEl) subtitleEl.textContent = displaySub || genreDisplay || 'أحدث الأفلام الحصرية';
+        if (ratingEl) ratingEl.textContent = `★ ${hero.rating || '9.2'}`;
+        if (durationEl) durationEl.textContent = hero.duration || '105 دقيقة';
         if (yearEl) yearEl.textContent = hero.year || '2024';
-        if (qualityEl) qualityEl.textContent = hero.quality || '4K Ultra HD';
+        if (qualityEl) qualityEl.textContent = hero.quality || '1080p FHD';
         if (synopsisEl) synopsisEl.textContent = hero.synopsis || '';
 
         // Play button
@@ -469,14 +491,18 @@ const App = {
         `).join('');
 
         track.querySelectorAll('.match-card').forEach((card, idx) => {
-            card.onclick = () => {
+            card.onclick = async () => {
                 const match = liveMatches[idx];
-                if (window.PlayerController) {
-                    window.PlayerController.requestPlayUrl('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', {
-                        title: `مباراة: ${match.team1} ضد ${match.team2} (${match.tourney})`,
-                        subtitle: `بث مباشر • ${match.channel}`,
-                        quality: '1080p 60FPS'
-                    });
+                try {
+                    const channels = await window.API.getLiveChannels('all').catch(() => []);
+                    const ch = channels.find(c => c.name && (c.name.includes(match.channel) || match.channel.includes(c.name))) || channels[0];
+                    if (ch && window.PlayerController) {
+                        window.PlayerController.requestPlay(ch);
+                    } else if (window.TVNav) {
+                        window.TVNav.navigateToTab('live-tv');
+                    }
+                } catch (e) {
+                    if (window.TVNav) window.TVNav.navigateToTab('live-tv');
                 }
             };
         });
@@ -659,8 +685,9 @@ const App = {
         const rowTrending = createRow('رائج اليوم', trendingItems, 'all', true);
         if (rowTrending) sectionsContainer.appendChild(rowTrending);
 
-        // 2. Row 2: "أحدث الحلقات" (Episodes with duration & play button)
-        if (feedRecentEpisodes && feedRecentEpisodes.length > 0) {
+        // 2. Row 2: "أحدث الحلقات" (Only render if genuine episodes with valid thumbnails exist)
+        const validRecentEpisodes = (feedRecentEpisodes || []).filter(ep => ep.thumbnail && !ep.thumbnail.includes('default') && ep.series_title);
+        if (validRecentEpisodes && validRecentEpisodes.length >= 4) {
             const rowEp = document.createElement('div');
             rowEp.className = 'section-row';
             rowEp.innerHTML = `
@@ -672,7 +699,7 @@ const App = {
                 </div>
                 <div class="carousel-track-container">
                     <div class="carousel-track media-row">
-                        ${feedRecentEpisodes.map(ep => `
+                        ${validRecentEpisodes.map(ep => `
                             <div class="episode-h-card focusable" data-media-id="${ep.media_id}" data-ep-num="${ep.episode_number}" data-season-num="${ep.season_number}" tabindex="0" role="button">
                                 <img src="${ep.thumbnail}" alt="${ep.series_title}" class="episode-h-img" onerror="this.onerror=null;this.src='assets/default_backdrop.jpg';">
                                 <span class="episode-duration-pill">${ep.duration || '45:00'}</span>

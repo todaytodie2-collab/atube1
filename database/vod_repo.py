@@ -674,7 +674,8 @@ class VODRepository:
             FROM vod_episodes e
             JOIN vod_media m ON e.media_id = m.id
             {where_clause}
-            ORDER BY e.id DESC
+            GROUP BY e.media_id
+            ORDER BY MAX(e.id) DESC
             LIMIT ?
         """
         cur.execute(query, tuple(params + [limit]))
