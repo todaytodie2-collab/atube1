@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-18T18:50:14.330585+00:00",
+  "timestamp": "2026-09-19T02:53:27.969307+00:00",
   "providers_scanned": [
     "Shahid4U",
     "ArabSeed",
@@ -13,7 +13,7 @@
     "EgyBest"
   ],
   "max_pages_per_category": 2,
-  "total_scanned": 1572,
+  "total_scanned": 2124,
   "total_inserted": 780,
   "new_media_items": [
     {
@@ -4710,5 +4710,5 @@
     }
   ],
   "errors": [],
-  "duration_seconds": 1864.86
+  "duration_seconds": 1695.79
 }
